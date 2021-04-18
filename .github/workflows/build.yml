@@ -13,6 +13,6 @@ jobs:
         run: |
           nuget install Grasshopper -OutputDirectory ./lib
           choco install ironpython --version=2.7.8.1
-          ipy -c "import clr;clr.AddReferenceToFileAndPath('./lib/GH_IO.dll');print('ok!')"
+          ipy componentize.py
         env:
           IRONPYTHONPATH: ./src
