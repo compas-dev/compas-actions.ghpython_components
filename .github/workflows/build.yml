@@ -9,6 +9,9 @@ jobs:
     steps:
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1.0.5
+      - name: Where are you?
+        run: |
+          ls
       - name: Install IronPython
         run: |
           choco install ironpython --version=2.7.8.1
@@ -17,7 +20,6 @@ jobs:
           nuget install Grasshopper -OutputDirectory ./lib
       - name: Run
         run: |
-          cd
           ipy ${{env.working-directory}}/componentize.py
         env:
           IRONPYTHONPATH: ./src
