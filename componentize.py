@@ -6,7 +6,7 @@ import os
 import clr
 
 if __name__ == '__main__':
-    here = os.path.dirname(__file__)
+    here = os.path.dirname(os.path.abspath(__file__))
     libdir = os.path.join(here, 'lib')
     gh_io = os.path.join(libdir, 'GH_IO.dll')
     print('Running on {}'.format(here))
