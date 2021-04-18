@@ -5,20 +5,21 @@ import os
 
 import clr
 
+def find_ghio_assembly(libdir):
+    for root, _dirs, files in os.walk(libdir):
+        for basename in files:
+            if basename == 'GH_IO.dll':
+                print('Found!')
+                filename = os.path.join(root, basename)
+                return filename
+
 if __name__ == '__main__':
     here = os.path.dirname(os.path.abspath(__file__))
     libdir = os.path.join(here, 'lib')
-    gh_io = os.path.join(libdir, 'GH_IO.dll')
-    print('Running on {}'.format(here))
-    print('Libs should be present under {}'.format(libdir))
+    gh_io = find_ghio_assembly(libdir)
 
-    for f in glob.glob(os.path.join(libdir, '*.dll')):
-        print('Found this:', f)
-    try:
-        clr.AddReferenceToFileAndPath(gh_io)
-        print('Managed to find by path')
-    except:
-        clr.AddReference('GH_IO')
-        print('Managed to find by ref name!')
+    print('GH_IO assembly found: {}'.format(gh_io))
+
+    clr.AddReferenceToFileAndPath(gh_io)
 
     print('Done!')
