@@ -6,12 +6,16 @@ jobs:
   build:
     name: windows-ironpython
     runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash -l {0}
     steps:
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1.0.5
       - name: Where are you?
         run: |
-          ls
+          ls *.py
+          pwd
       - name: Install IronPython
         run: |
           choco install ironpython --version=2.7.8.1
