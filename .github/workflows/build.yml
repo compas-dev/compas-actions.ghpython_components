@@ -18,6 +18,6 @@ jobs:
       - name: Run
         run: |
           cd
-          ipy ./componentize.py
+          ipy ${{env.working-directory}}/componentize.py
         env:
           IRONPYTHONPATH: ./src
