@@ -33,7 +33,7 @@ jobs:
       - name: Install IronPython
         run: |
           choco install ironpython --version=2.7.8.1
-      - uses: compas-dev/compas-actions.ghpython_components@main
+      - uses: compas-dev/compas-actions.ghpython_components@v1
         with:
           source: components
           target: build
