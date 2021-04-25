@@ -14,6 +14,32 @@ Well, here's an action for you then! 🦸‍♀️
 ### Usage from Github Actions
 
 The recommended way to use this tool is as a Github Action.
+It needs to be run on a windows runner and IronPython/NuGet need to be pre-installed.
+
+Copy the following workflow code into a `.github/workflows/main.yml` file in your repository.
+Make sure you have the components definition (see below for details) stored in a source folder.
+Replace the `source` and `target` to match your folder structure.
+
+```yaml
+on: [push]
+
+jobs:
+  build_ghuser_components:
+    runs-on: windows-latest
+    name: Build components
+    steps:
+      - uses: actions/checkout@v2
+      - uses: NuGet/setup-nuget@v1.0.5
+      - name: Install IronPython
+        run: |
+          choco install ironpython --version=2.7.8.1
+      - uses: compas-dev/compas-actions.ghpython_components@main
+        with:
+          source: components
+          target: build
+```
+
+Commit, push and enjoy! 🍿
 
 ### Usage on the command line
 
