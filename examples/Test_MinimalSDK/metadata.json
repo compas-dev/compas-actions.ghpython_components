@@ -1,0 +1,27 @@
+{
+    "name": "Minimal SDK component example",
+    "nickname": "MinSDK",
+    "description": "This is an example with the minimum of options set using SDK mode and relying on defaults for everything else",
+    "category": "Componentizer",
+    "subcategory": "MAIN",
+
+    "ghpython": {
+        "isAdvancedMode": true,
+        "inputParameters": [
+            {
+                "name": "x"
+            },
+            {
+                "name": "y"
+            },
+            {
+                "name": "z"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "a"
+            }
+        ]
+    }
+}
