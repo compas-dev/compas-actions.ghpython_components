@@ -12,5 +12,5 @@ runs:
   steps:
     - run: nuget install Grasshopper -OutputDirectory ./lib
       shell: bash
-    - run: ipy componentize.py ${{ inputs.source }} ${{ inputs.target }}
+    - run: ipy ${{ github.action_path }}/componentize.py ${{ inputs.source }} ${{ inputs.target }}
       shell: bash
