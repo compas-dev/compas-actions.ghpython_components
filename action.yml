@@ -11,8 +11,8 @@ runs:
   using: 'composite'
   steps:
     - run: nuget install Grasshopper -OutputDirectory ./lib
-      shell: bash
+      shell: pwsh
     - run: ls ${{ github.action_path }}
-      shell: bash
+      shell: pwsh
     - run: ipy ${{ github.action_path }}/componentize.py ${{ inputs.source }} ${{ inputs.target }}
-      shell: bash
+      shell: pwsh
