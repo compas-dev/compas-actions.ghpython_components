@@ -264,7 +264,7 @@ if __name__ == '__main__':
         here = os.path.dirname(os.path.abspath(__file__))
         libdir = os.path.join(here, 'lib')
     else:
-        libdir = args.ghio
+        libdir = os.path.abspath(args.ghio)
     gh_io = find_ghio_assembly(libdir)
     source_bundles = [d for d in os.listdir(sourcedir)
                       if os.path.isdir(os.path.join(sourcedir, d))]
