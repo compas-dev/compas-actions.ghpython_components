@@ -12,7 +12,5 @@ runs:
   steps:
     - run: nuget install Grasshopper -OutputDirectory ./lib
       shell: pwsh
-    - run: ls ${{ github.action_path }}
-      shell: pwsh
     - run: ipy ${{ github.action_path }}/componentize.py ${{ inputs.source }} ${{ inputs.target }} --ghio ./lib
       shell: pwsh
