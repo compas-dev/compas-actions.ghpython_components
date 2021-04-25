@@ -14,5 +14,5 @@ runs:
       shell: pwsh
     - run: ls ${{ github.action_path }}
       shell: pwsh
-    - run: ipy ${{ github.action_path }}/componentize.py ${{ inputs.source }} ${{ inputs.target }}
+    - run: ipy ${{ github.action_path }}/componentize.py ${{ inputs.source }} ${{ inputs.target }} --ghio ./lib
       shell: pwsh
