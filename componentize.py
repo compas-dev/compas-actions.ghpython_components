@@ -87,11 +87,11 @@ def validate_source_bundle(source):
     data = os.path.join(source, 'metadata.json')
 
     if not os.path.exists(icon):
-        raise ValueError('icon missing, make sure icon.png is present in the source bundle')
+        raise ValueError('icon missing, make sure icon.png is present in the source bundle: {}'.format(source))
     if not os.path.exists(code):
-        raise ValueError('code missing, make sure code.py is present in the source bundle')
+        raise ValueError('code missing, make sure code.py is present in the source bundle: {}'.format(source))
     if not os.path.exists(data):
-        raise ValueError('metadata missing, make sure metadata.json is present in the source bundle')
+        raise ValueError('metadata missing, make sure metadata.json is present in the source bundle: {}'.format(source))
 
     icon = bitmap_from_image_path(icon)
     
@@ -267,7 +267,7 @@ if __name__ == '__main__':
         libdir = os.path.abspath(args.ghio)
     gh_io = find_ghio_assembly(libdir)
     source_bundles = [d for d in os.listdir(sourcedir)
-                      if os.path.isdir(os.path.join(sourcedir, d))]
+                      if os.path.isdir(os.path.join(sourcedir, d)) and d not in ('__pycache__', '.git')]
 
     print('GHPython componentizer')
     print('======================')
