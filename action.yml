@@ -10,7 +10,7 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - run: nuget install Grasshopper -OutputDirectory ./lib
+    - run: nuget install Grasshopper -OutputDirectory ./lib -source https://api.nuget.org/v3/index.json
       shell: pwsh
     - run: ipy ${{ github.action_path }}/componentize.py ${{ inputs.source }} ${{ inputs.target }} --ghio ./lib
       shell: pwsh
