@@ -14,7 +14,7 @@ jobs:
           choco install ironpython --version=2.7.8.1
       - name: Install dependencies
         run: |
-          nuget install Grasshopper -OutputDirectory ./lib
+          nuget install Grasshopper -OutputDirectory ./lib -source https://api.nuget.org/v3/index.json
       - name: Run
         run: |
           ipy componentize.py examples build
