@@ -102,6 +102,10 @@ Optionally, tag it with a version:
   * `hideInput`: **(optional)** Defines whether to hide or not the `code` input parameter. Defaults to `True`.
   * `isAdvancedMode`: **(optional)** Defines whether the script is in advanced mode (aka GH_Component SDK mode) or procedural mode. Defaults to `False`.
   * `marshalOutGuids`: **(optional)** Defines whether output Guids will be looked up or not. Defaults to `True`. Change to `False` to preserve output Guids.
+  * `iconDisplay`: **(optional)** Defines whether to display the icon or not. Defaults to `0`.
+    * `0` : Application setting
+    * `1` : Text display
+    * `2` : Icon display
   * `inputParameters`: List of input parameters.
     * `name`: Name of the input parameter.
     * `nickname`: **(optional)** Abbreviation of the input parameter. Defaults to the same as `name`.

@@ -193,11 +193,12 @@ def create_ghuser_component(source, target, version=None):
     ghpython_root.SetBoolean('HideOutput', ghpython_data.get('hideOutput', True))
     ghpython_root.SetBoolean('HideInput', ghpython_data.get('hideInput', True))
     ghpython_root.SetBoolean('IsAdvancedMode', ghpython_data.get('isAdvancedMode', False))
+    ghpython_root.SetInt32('IconDisplay', ghpython_data.get('iconDisplay', 0))
     ghpython_root.SetString('Name', data['name'])
     ghpython_root.SetString('NickName', data['nickname'])
     ghpython_root.SetBoolean('MarshalOutGuids', ghpython_data.get('marshalOutGuids', True))
     ghpython_root.SetString('CodeInput', code)
-
+    
     # ghpython_root.CreateChunk('Attributes')
     # for mf in ('Bounds', 'Pivot', 'Selected'):
     params = ghpython_root.CreateChunk('ParameterData')
