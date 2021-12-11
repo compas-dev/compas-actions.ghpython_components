@@ -18,3 +18,7 @@ jobs:
       - name: Run
         run: |
           ipy componentize.py examples build
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ghuser-components
+          path: lib
