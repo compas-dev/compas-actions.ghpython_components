@@ -12,6 +12,7 @@
         "hideInput": true,
         "isAdvancedMode": true,
         "marshalOutGuids": true,
+        "iconDisplay": 2,
         "inputParameters": [
             {
                 "name": "X",

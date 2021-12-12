@@ -37,6 +37,15 @@ jobs:
         with:
           source: components
           target: build
+
+      # The components have been built at this step.
+      # Now you can choose what to do with them, e.g.:
+      # upload them as artifacts:
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ghuser-components
+          path: build
+
 ```
 
 Commit, push and enjoy! 🍿
@@ -64,6 +73,15 @@ Optionally, tag it with a version:
    1. Add a `code.py` file with the Python script of the component
 1. Use this action setting `source` and `target` folder inputs
 1. Be happy 🎈
+
+## Where are the generated components?
+
+This action stores the generated components under the `target` folder, but these files only exist for the duration of the build.
+After that -if no further steps are taken- they will be automatically deleted.
+
+The simplest option to keep the generated files is to use the `actions/upload-artifact@v2` action and upload them as artifacts. Check [this for more details](https://github.com/actions/upload-artifact) and in particular, [the details about where to find the uploaded artifacts](https://github.com/actions/upload-artifact#where-does-the-upload-go).
+
+An alternative is to include them in your packaging steps, e.g. calling `python setup.py clean --all sdist bdist_wheel` right after having generated the components (and assuming your setup is configured accordingly, will pick up the components and add them to the pip package. This is a very convenient way that ensures the components are always released from a clean state. An example of this is available on the [release workflow of COMPAS](https://github.com/compas-dev/compas/blob/main/.github/workflows/release.yml).
 
 ## Specification
 
@@ -102,6 +120,10 @@ Optionally, tag it with a version:
   * `hideInput`: **(optional)** Defines whether to hide or not the `code` input parameter. Defaults to `True`.
   * `isAdvancedMode`: **(optional)** Defines whether the script is in advanced mode (aka GH_Component SDK mode) or procedural mode. Defaults to `False`.
   * `marshalOutGuids`: **(optional)** Defines whether output Guids will be looked up or not. Defaults to `True`. Change to `False` to preserve output Guids.
+  * `iconDisplay`: **(optional)** Defines whether to display the icon or not. Defaults to `0`.
+    * `0` : Application setting
+    * `1` : Text display
+    * `2` : Icon display
   * `inputParameters`: List of input parameters.
     * `name`: Name of the input parameter.
     * `nickname`: **(optional)** Abbreviation of the input parameter. Defaults to the same as `name`.
