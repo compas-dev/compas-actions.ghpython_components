@@ -6,6 +6,10 @@ import json
 import os
 import re
 import sys
+import tempfile
+import urllib
+import zipfile
+import StringIO
 
 import clr
 import System
@@ -65,6 +69,22 @@ WIRE_DISPLAY = dict(
     map=dict(default=0, faint=1, hidden=2),
     default=0
 )
+
+
+def fetch_ghio_lib(target_folder='temp'):
+    """Fetch the GH_IO.dll library from the NuGet packaging system."""
+    ghio_dll = 'GH_IO.dll'
+    filename = 'lib/net48/' + ghio_dll
+
+    response = urllib.urlopen('https://www.nuget.org/api/v2/package/Grasshopper/')
+    dst_file = os.path.join(target_folder, ghio_dll)
+    zip_file = zipfile.ZipFile(StringIO.StringIO(response.read()))
+
+    with zip_file.open(filename, 'r') as zipped_dll:
+        with open(dst_file, 'wb') as fp:
+            fp.write(zipped_dll.read())
+
+    return dst_file
 
 
 def find_ghio_assembly(libdir):
@@ -261,8 +281,8 @@ if __name__ == '__main__':
         targetdir = os.path.abspath(targetdir)
 
     if args.ghio is None:
-        here = os.path.dirname(os.path.abspath(__file__))
-        libdir = os.path.join(here, 'lib')
+        libdir = tempfile.mkdtemp('ghio')
+        fetch_ghio_lib(libdir)
     else:
         libdir = os.path.abspath(args.ghio)
     gh_io = find_ghio_assembly(libdir)
