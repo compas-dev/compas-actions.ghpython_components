@@ -200,7 +200,7 @@ def create_ghuser_component(source, target, version=None, prefix=None):
     root = GH_LooseChunk('UserObject')
 
     root.SetGuid('BaseID', GHPYTHON_SCRIPT_GUID)
-    root.SetString('Name', prefix+data['name'])
+    root.SetString('Name', prefix + data['name'])
     root.SetString('NickName', data['nickname'])
     root.SetString('Description', data.get('description', ''))
     root.SetInt32('Exposure', data.get('exposure', EXPOSURE['default']))
