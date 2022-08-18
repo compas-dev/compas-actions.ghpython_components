@@ -62,6 +62,10 @@ Optionally, tag it with a version:
 
     ipy componentize.py examples build --version 0.1.2
 
+An optional name prefix can help tell components apart from other similarly named ones:
+
+    ipy componentize.py examples build --prefix "(PACKAGE-NAME)"
+
 ## How to create components
 
 1. Create a folder to contain your components

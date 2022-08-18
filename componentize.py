@@ -182,7 +182,7 @@ def replace_templates(code, version, name, ghuser_name):
     return code
 
 
-def create_ghuser_component(source, target, version=None):
+def create_ghuser_component(source, target, version=None, prefix=None):
     from GH_IO.Serialization import GH_LooseChunk
     icon, code, data = validate_source_bundle(source)
 
@@ -195,10 +195,12 @@ def create_ghuser_component(source, target, version=None):
     else:
         instance_guid = System.Guid.Parse(instance_guid)
 
+    prefix = prefix or ''
+
     root = GH_LooseChunk('UserObject')
 
     root.SetGuid('BaseID', GHPYTHON_SCRIPT_GUID)
-    root.SetString('Name', data['name'])
+    root.SetString('Name', prefix + data['name'])
     root.SetString('NickName', data['nickname'])
     root.SetString('Description', data.get('description', ''))
     root.SetInt32('Exposure', data.get('exposure', EXPOSURE['default']))
@@ -271,6 +273,7 @@ if __name__ == '__main__':
     parser.add_argument('target', type=str, help='Target directory for ghuser files')
     parser.add_argument('--ghio', type=str, required=False, help='Folder where the GH_IO.dll assembly is located. Defaults to ./lib')
     parser.add_argument('--version', type=str, required=False, help='Version to tag components')
+    parser.add_argument('--prefix', type=str, required=False, help='Add this prefix to the name of each generated component')
     args = parser.parse_args()
 
     sourcedir = args.source
@@ -313,6 +316,6 @@ if __name__ == '__main__':
         source = os.path.join(sourcedir, d)
         target = os.path.join(targetdir, d + '.ghuser')
         print('  [ ] {}\r'.format(d), end='')
-        create_ghuser_component(source, target, args.version)
+        create_ghuser_component(source, target, args.version, args.prefix)
         print('  [x] {} => {}'.format(d, target))
 
