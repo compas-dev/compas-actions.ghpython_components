@@ -116,7 +116,7 @@ def validate_source_bundle(source):
     icon = bitmap_from_image_path(icon)
     
     with open(code, 'r') as f:
-        code = f.read()
+        python_code = f.read()
 
     with open(data, 'r') as f:
         data = json.load(f)
@@ -127,7 +127,13 @@ def validate_source_bundle(source):
     if data['exposure'] not in EXPOSURE['valid']:
         raise ValueError('Invalid exposure value. Accepted values are {}'.format(sorted(EXPOSURE['valid'])))
 
-    return icon, code, data
+    ghpython = data.get('ghpython')
+    sdk_mode = ghpython and ghpython.get('isAdvancedMode', False)
+
+    if r'"""' not in python_code and sdk_mode is False:
+        print('Warning: {} file needs a docstring, otherwise the descriptions of the component and their inputs will be lost.'.format(code))
+
+    return icon, python_code, data
 
 
 def parse_param_access(access):
