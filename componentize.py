@@ -273,8 +273,8 @@ def create_ghuser_component(source, target, version=None, prefix=None):
         po_chunk.SetBoolean('Optional', po.get('optional', False))
         po_chunk.SetInt32('SourceCount', 0)
         po_chunk.SetGuid('InstanceGuid', output_instance_guid)
-        po_chunk.SetBoolean('ReverseData', pi.get('reverse', False))
-        po_chunk.SetBoolean('SimplifyData', pi.get('simplify', False))
+        po_chunk.SetBoolean('ReverseData', po.get('reverse', False))
+        po_chunk.SetBoolean('SimplifyData', po.get('simplify', False))
         # Mutually exclusive options
         if po.get('flatten', False):
             po_chunk.SetInt32('Mapping', 1)
