@@ -145,11 +145,19 @@ An alternative is to include them in your packaging steps, e.g. calling `python 
       `none`, `ghdoc`, `float`, `bool`, `int`, `complex`, `str`, `datetime`, `guid`,
       `color`, `point`, `vector`, `plane`, `interval`, `uvinterval`, `box`, `transform`,
       `line`, `circle`, `arc`, `polyline`, `rectangle`, `curve`, `mesh`, `surface`, `subd`, `brep`.
+    * `reverse`: **(optional)** Defines whether data inside the parameter is reversed. Defaults to `False`.
+    * `simplify`: **(optional)** Defines whether data inside the parameter is simplified. Defaults to `False`.
+    * `flatten`: **(optional)** Defines whether data inside the parameter is flattened. Mutually exclusive with `graft`. Defaults to `False`.
+    * `graft`: **(optional)** Defines whether data inside the parameter is grafted. Mutually exclusive with `flatten`. Defaults to `False`.
   * `outputParameters`: List of output parameters.
     * `name`: Name of the output parameter.
     * `nickname`: **(optional)** Abbreviation of the output parameter. Defaults to the same as `name`.
     * `description`: **(optional)** Description of the output parameter.
     * `optional`: **(optional)** Defines whether the output parameter is optional or not. Defaults to `False`.
+    * `reverse`: **(optional)** Defines whether data inside the parameter is reversed. Defaults to `False`.
+    * `simplify`: **(optional)** Defines whether data inside the parameter is simplified. Defaults to `False`.
+    * `flatten`: **(optional)** Defines whether data inside the parameter is flattened. Mutually exclusive with `graft`. Defaults to `False`.
+    * `graft`: **(optional)** Defines whether data inside the parameter is grafted. Mutually exclusive with `flatten`. Defaults to `False`.
 
 ## Caveats
 
