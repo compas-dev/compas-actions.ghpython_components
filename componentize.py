@@ -250,6 +250,13 @@ def create_ghuser_component(source, target, version=None, prefix=None):
         pi_chunk.SetGuid('InstanceGuid', input_instance_guid)
         pi_chunk.SetGuid('TypeHintID', parse_param_type_hint(pi.get('typeHintID')))
         pi_chunk.SetInt32('WireDisplay', parse_wire_display(pi.get('wireDisplay', WIRE_DISPLAY['default'])))
+        pi_chunk.SetBoolean('ReverseData', pi.get('reverse', False))
+        pi_chunk.SetBoolean('SimplifyData', pi.get('simplify', False))
+        # Mutually exclusive options
+        if pi.get('flatten', False):
+            pi_chunk.SetInt32('Mapping', 1)
+        elif pi.get('graft', False):
+            pi_chunk.SetInt32('Mapping', 2)
 
     for i, po in enumerate(outputParam):
         output_instance_guid = System.Guid.NewGuid()
@@ -260,6 +267,13 @@ def create_ghuser_component(source, target, version=None, prefix=None):
         po_chunk.SetBoolean('Optional', po.get('optional', False))
         po_chunk.SetInt32('SourceCount', 0)
         po_chunk.SetGuid('InstanceGuid', output_instance_guid)
+        po_chunk.SetBoolean('ReverseData', pi.get('reverse', False))
+        po_chunk.SetBoolean('SimplifyData', pi.get('simplify', False))
+        # Mutually exclusive options
+        if po.get('flatten', False):
+            po_chunk.SetInt32('Mapping', 1)
+        elif po.get('graft', False):
+            po_chunk.SetInt32('Mapping', 2)
 
     # print(ghpython_root.Serialize_Xml())
     root.SetByteArray('Object', ghpython_root.Serialize_Binary())
