@@ -148,7 +148,7 @@ An alternative is to include them in your packaging steps, e.g. calling `python 
       string values (their respective Guids are not listed here for readability):
       `none`, `ghdoc`, `float`, `bool`, `int`, `complex`, `str`, `datetime`, `guid`,
       `color`, `point`, `vector`, `plane`, `interval`, `uvinterval`, `box`, `transform`,
-      `line`, `circle`, `arc`, `polyline`, `rectangle`, `curve`, `mesh`, `surface`, `subd`, `brep`.
+      `line`, `circle`, `arc`, `polyline`, `rectangle`, `curve`, `mesh`, `surface`, `subd`, `brep`, `geometrybase`.
     * `reverse`: **(optional)** Defines whether data inside the parameter is reversed. Defaults to `False`.
     * `simplify`: **(optional)** Defines whether data inside the parameter is simplified. Defaults to `False`.
     * `flatten`: **(optional)** Defines whether data inside the parameter is flattened. Mutually exclusive with `graft`. Defaults to `False`.
