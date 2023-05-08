@@ -19,7 +19,7 @@ runs:
         $command="ipy"
         $params="${{ github.action_path }}/componentize.py", "${{ inputs.source }}", "${{ inputs.target }}", "--ghio", "./lib"
         $prefix="${{ inputs.prefix }}"      
-        if( $null -ne $prefix )
+        if( $prefix )
         {
           $params=$params + "--prefix", "$prefix"
         }
