@@ -13,15 +13,15 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - run: |
-      command="ipy ipy ${{ github.action_path }}/componentize.py ${{ inputs.source }} ${{ inputs.target }} --ghio ./lib"
-      prefix="${{ inputs.prefix }}"      
-      if [ -n "$prefix" ]; then
-        command="$command --prefix $prefix"
-      fi
     - run: nuget install Grasshopper -OutputDirectory ./lib -source https://api.nuget.org/v3/index.json
       shell: pwsh
-    - run: $command
+    - run: |
+        command="ipy ${{ github.action_path }}/componentize.py ${{ inputs.source }} ${{ inputs.target }} --ghio ./lib"
+        prefix="${{ inputs.prefix }}"      
+        if [ -n "$prefix" ]; then
+          command="$command --prefix $prefix"
+        fi
+        $command
       shell: pwsh
 branding:
   icon: 'box'
