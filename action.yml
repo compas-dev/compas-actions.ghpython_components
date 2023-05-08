@@ -16,13 +16,14 @@ runs:
     - run: nuget install Grasshopper -OutputDirectory ./lib -source https://api.nuget.org/v3/index.json
       shell: pwsh
     - run: |
-        command="ipy ${{ github.action_path }}/componentize.py ${{ inputs.source }} ${{ inputs.target }} --ghio ./lib"
-        prefix="${{ inputs.prefix }}"      
+        $command="ipy"
+        $params="${{ github.action_path }}/componentize.py", "${{ inputs.source }}", "${{ inputs.target }}", "--ghio", "./lib"
+        $prefix="${{ inputs.prefix }}"      
         if( $null -ne $prefix )
         {
-          command="$command --prefix $prefix"
+          $params=$params + "--prefix", "$prefix"
         }
-        $command
+        & $command $params
       shell: pwsh
 branding:
   icon: 'box'
