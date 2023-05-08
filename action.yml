@@ -18,9 +18,10 @@ runs:
     - run: |
         command="ipy ${{ github.action_path }}/componentize.py ${{ inputs.source }} ${{ inputs.target }} --ghio ./lib"
         prefix="${{ inputs.prefix }}"      
-        if [[ -n "$prefix" ]]; then
+        if( $null -ne $prefix )
+        {
           command="$command --prefix $prefix"
-        fi
+        }
         $command
       shell: pwsh
 branding:
