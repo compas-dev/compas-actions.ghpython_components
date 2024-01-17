@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - cpy_dev
+      - main
 
 jobs:
   build_ghuser_components:
