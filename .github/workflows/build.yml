@@ -1,5 +1,8 @@
 name: build
-on: [push]
+on:
+  push:
+    branches:
+      - cpy_dev
 
 jobs:
   build_ghuser_components:
