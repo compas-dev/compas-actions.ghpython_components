@@ -1,23 +1,26 @@
 name: build
-
 on: [push]
 
 jobs:
-  build:
-    name: windows-ironpython
+  build_ghuser_components:
     runs-on: windows-latest
+    name: Build components
     steps:
       - uses: actions/checkout@v2
       - uses: NuGet/setup-nuget@v1.0.5
-      - name: Install IronPython
+
+      - name: Install Python and pythonnet
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9.10'
+      - name: Install pythonnet
         run: |
-          choco install ironpython --version=2.7.8.1
-      - name: Install dependencies
-        run: |
-          nuget install Grasshopper -OutputDirectory ./lib -source https://api.nuget.org/v3/index.json
-      - name: Run
-        run: |
-          ipy componentize.py examples build
+          pip install pythonnet
+      - uses: ./.github/actions/ghpython-components
+        with:
+          source: examples
+          target: build
+
       - uses: actions/upload-artifact@v2
         with:
           name: ghuser-components

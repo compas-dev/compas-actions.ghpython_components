@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 import argparse
 import base64
 import json
@@ -7,15 +5,15 @@ import os
 import re
 import sys
 import tempfile
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import zipfile
-import StringIO
+from io import StringIO
 
 import clr
 import System
 import System.IO
 
-GHPYTHON_SCRIPT_GUID = System.Guid("410755b1-224a-4c1e-a407-bf32fb45ea7e")
+GHPYTHON_SCRIPT_GUID = System.Guid("410755b1-224a-4c1e-a407-bf32fb45ea7d")
 TEMPLATE_VER = re.compile("{{version}}")
 TEMPLATE_NAME = re.compile("{{name}}")
 TEMPLATE_GHUSER_NAME = re.compile("{{ghuser_name}}")
@@ -87,8 +85,14 @@ def find_ghio_assembly(libdir):
 
 def bitmap_from_image_path(image_path):
     with open(image_path, "rb") as imageFile:
+        # Ensure img_string is a string, not a bytes object
         img_string = base64.b64encode(imageFile.read())
-    return System.Convert.FromBase64String(img_string)
+        if isinstance(img_string, bytes):
+            img_string = img_string.decode()
+
+        # Now you can pass img_string to the FromBase64String method
+        return System.Convert.FromBase64String(img_string)
+    # return System.Convert.FromBase64String(img_string)
 
 
 def validate_source_bundle(source):
@@ -316,6 +320,7 @@ def create_ghuser_component(source, target, version=None, prefix=None):
             po_chunk.SetInt32("Mapping", 2)
 
     # print(ghpython_root.Serialize_Xml())
+    
     root.SetByteArray("Object", ghpython_root.Serialize_Binary())
 
     System.IO.File.WriteAllBytes(target, root.Serialize_Binary())
@@ -378,14 +383,16 @@ if __name__ == "__main__":
         os.mkdir(targetdir)
     print("[x]")
 
-    print("[ ] GH_IO assembly: {}\r".format(gh_io or args.ghio), end="")
+    # print("[ ] GH_IO assembly: {}\r".format(gh_io or args.ghio), end="")
     if not gh_io:
-        print("[-]")
-        print("    Cannot find GH_IO Assembly! Aborting.")
+        print("[-]  Cannot find GH_IO Assembly! Aborting.")
         sys.exit(-1)
-    clr.AddReferenceToFileAndPath(gh_io)
-    print("[x]")
-    print()
+
+    gh_io = os.path.abspath(gh_io)
+    gh_io = gh_io[:-4]
+    clr.AddReference(gh_io)
+
+    print("[x] GH_IO assembly: {}".format(gh_io))
 
     print("Processing component bundles:")
     for d in source_bundles:
