@@ -13,7 +13,7 @@ import clr
 import System
 import System.IO
 
-GHPYTHON_SCRIPT_GUID = System.Guid("410755b1-224a-4c1e-a407-bf32fb45ea7d")
+GHPYTHON_SCRIPT_GUID = System.Guid("410755b1-224a-4c1e-a407-bf32fb45ea7e")
 TEMPLATE_VER = re.compile("{{version}}")
 TEMPLATE_NAME = re.compile("{{name}}")
 TEMPLATE_GHUSER_NAME = re.compile("{{ghuser_name}}")
@@ -391,7 +391,7 @@ if __name__ == "__main__":
     gh_io = os.path.abspath(gh_io)
     gh_io = gh_io[:-4]
     clr.AddReference(gh_io)
-
+    
     print("[x] GH_IO assembly: {}".format(gh_io))
 
     print("Processing component bundles:")

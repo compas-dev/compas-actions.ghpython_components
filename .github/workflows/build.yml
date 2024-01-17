@@ -2,7 +2,7 @@ name: build
 on:
   push:
     branches:
-      - cpy_dev
+      - cpy_dev  # TODO: to erase once merged
       - main
 
 jobs:
@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: NuGet/setup-nuget@v1.0.5
 
-      - name: Install Python and pythonnet
+      - name: Install Python3
         uses: actions/setup-python@v2
         with:
           python-version: '3.9.10'
