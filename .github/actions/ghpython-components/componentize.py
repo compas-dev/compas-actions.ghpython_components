@@ -13,11 +13,12 @@ import clr
 import System
 import System.IO
 
-GHPYTHON_SCRIPT_GUID = System.Guid("410755b1-224a-4c1e-a407-bf32fb45ea7e")
+GHPYTHON_SCRIPT_GUID = System.Guid("c9b2d725-6f87-4b07-af90-bd9aefef68eb")  # <<<<<<<<<<<< changed
 TEMPLATE_VER = re.compile("{{version}}")
 TEMPLATE_NAME = re.compile("{{name}}")
 TEMPLATE_GHUSER_NAME = re.compile("{{ghuser_name}}")
 
+# TODO: we might want to double check this list if the guid are the same in Rhino 8
 TYPES_MAP = dict(
     none="35915213-5534-4277-81b8-1bdc9e7383d2",
     ghdoc="87f87f55-5b71-41f4-8aea-21d494016f81",
@@ -49,6 +50,7 @@ TYPES_MAP = dict(
     geometrybase="c37956f4-d39c-49c7-af71-1e87f8031b26",
 )
 
+#TODO: double check, don't know this param
 EXPOSURE = dict(valid=set([-1, 2, 4, 8, 16, 32, 64, 128]), default=2)
 ACCESS = dict(valid=set([0, 1, 2]), map=dict(item=0, list=1, tree=2), default=0)
 PARAM_TYPE = dict(
@@ -213,7 +215,7 @@ def replace_templates(code, version, name, ghuser_name):
 
     return code
 
-
+# FIXME: main function to port for GHUser in Python3
 def create_ghuser_component(source, target, version=None, prefix=None):
     from GH_IO.Serialization import GH_LooseChunk
 
@@ -221,6 +223,7 @@ def create_ghuser_component(source, target, version=None, prefix=None):
 
     code = replace_templates(code, version, data["name"], os.path.basename(target))
 
+    # new guid
     instance_guid = data.get("instanceGuid")
     if not instance_guid:
         instance_guid = System.Guid.NewGuid()
@@ -229,101 +232,145 @@ def create_ghuser_component(source, target, version=None, prefix=None):
 
     prefix = prefix or ""
 
+    # ------------------------------
+    # ------------------------------
+    # root
     root = GH_LooseChunk("UserObject")
 
-    root.SetGuid("BaseID", GHPYTHON_SCRIPT_GUID)
-    root.SetString("Name", prefix + data["name"])
-    root.SetString("NickName", data["nickname"])
-    root.SetString("Description", data.get("description", ""))
-    root.SetInt32("Exposure", data.get("exposure", EXPOSURE["default"]))
-    root.SetString("Category", data["category"])
-    root.SetString("SubCategory", data["subcategory"])
-    root.SetGuid("InstanceGuid", instance_guid)
-    root.SetByteArray("Icon", icon)
+    # ------------------------------
+    # main object chunk (root)
 
-    ghpython_data = data["ghpython"]
+    # LEGEND:
+    # ok :: is in bth ipy and cpy
+    # ?? :: cannot find it in the serialized xml or ghx
+    # !! :: is in ipy but not in cpy
+
+    root.SetGuid("BaseID", GHPYTHON_SCRIPT_GUID)  # ?? TODO: where this comes from? where it goes?
+    root.SetString("Name", prefix + data["name"])  # ok
+    root.SetString("NickName", data["nickname"])  # ok
+    root.SetString("Description", data.get("description", ""))  # ok
+    root.SetInt32("Exposure", data.get("exposure", EXPOSURE["default"]))  # ??
+    root.SetString("Category", data["category"])  # ??
+    root.SetString("SubCategory", data["subcategory"])  # ??
+    root.SetGuid("InstanceGuid", instance_guid)  # ok
+    root.SetByteArray("Icon", icon)  # ??
+
+    # ------------------------------
+    # this is the "Container"
+    ghpython_data = data["ghpython"]  # this a tuple containg code and other properties
+
     ghpython_root = GH_LooseChunk("UserObject")
-    ghpython_root.SetString("Description", data.get("description", ""))
-    ghpython_root.SetBoolean("HideOutput", ghpython_data.get("hideOutput", True))
-    ghpython_root.SetBoolean("HideInput", ghpython_data.get("hideInput", True))
-    ghpython_root.SetBoolean(
-        "IsAdvancedMode", ghpython_data.get("isAdvancedMode", False)
-    )
-    ghpython_root.SetInt32("IconDisplay", ghpython_data.get("iconDisplay", 0))
-    ghpython_root.SetString("Name", data["name"])
-    ghpython_root.SetString("NickName", data["nickname"])
-    ghpython_root.SetBoolean(
-        "MarshalOutGuids", ghpython_data.get("marshalOutGuids", True)
-    )
-    ghpython_root.SetString("CodeInput", code)
 
+    ghpython_root.SetString("Description", data.get("description", ""))  # ok : this is still in container's items
+    ghpython_root.SetBoolean("HideOutput", ghpython_data.get("hideOutput", True))  # !! this is still in container's items
+    ghpython_root.SetBoolean("HideInput", ghpython_data.get("hideInput", True))  # !! this is still in container's items
+    ghpython_root.SetBoolean(
+        "IsAdvancedMode", ghpython_data.get("isAdvancedMode", False)  # !! this is still in container's items
+    )
+    ghpython_root.SetInt32("IconDisplay", ghpython_data.get("iconDisplay", 0))  # !! this is still in container's items
+    ghpython_root.SetString("Name", data["name"])  # ok
+    ghpython_root.SetString("NickName", data["nickname"])  # ok
+    ghpython_root.SetBoolean(
+        "MarshalOutGuids", ghpython_data.get("marshalOutGuids", True)  # **!! it changed to "MarshalGuids" in cpy
+    )
+
+    # ------------------------------
+    # code
+
+    # FIXME: does not exist anymore, need a new chunk
+    ghpython_root.SetString("CodeInput", code)
+    print("CodeInput", code)
+
+    # ------------------------------
+    # ------------------------------
+    # attributes
+    # paramter data  TODO: why this was originally commented out?
     # ghpython_root.CreateChunk('Attributes')
     # for mf in ('Bounds', 'Pivot', 'Selected'):
-    params = ghpython_root.CreateChunk("ParameterData")
-    inputParam = ghpython_data.get("inputParameters", [])
-    outputParam = ghpython_data.get("outputParameters", [])
 
-    params.SetInt32("InputCount", len(inputParam))
+    # ------------------------------
+    # ------------------------------
+    # parameters
+    params = ghpython_root.CreateChunk("ParameterData")  # ok
+    inputParam = ghpython_data.get("inputParameters", [])  # ok
+    outputParam = ghpython_data.get("outputParameters", []) # ok
+
+    params.SetInt32("InputCount", len(inputParam))  # ok
     for i, _pi in enumerate(inputParam):
         params.SetGuid(
-            "InputId", i, System.Guid.Parse("84fa917c-1ed8-4db3-8be1-7bdc4a6495a2")
+            "InputId", i, System.Guid.Parse("08908df5-fa14-4982-9ab2-1aa0927566aa")  # ok <<<<<<<<<<<< changed
         )
-    params.SetInt32("OutputCount", len(outputParam))
+    params.SetInt32("OutputCount", len(outputParam))  # ok
     for i, _po in enumerate(outputParam):
         params.SetGuid(
-            "OutputId", i, System.Guid.Parse("8ec86459-bf01-4409-baee-174d0d2b13d0")
+            "OutputId", i, System.Guid.Parse("3ede854e-c753-40eb-84cb-b48008f14fd4")  # ok <<<<<<<<<<<< changed
         )
 
+    # ------------------------------
+    # input parameters
     for i, pi in enumerate(inputParam):
         input_instance_guid = System.Guid.NewGuid()
         pi_chunk = params.CreateChunk("InputParam", i)
-        pi_chunk.SetString("Name", pi["name"])
-        pi_chunk.SetString("NickName", pi.get("nickname") or pi["name"])
-        pi_chunk.SetString("Description", pi.get("description"))
-        pi_chunk.SetBoolean("Optional", pi.get("optional", True))
-        pi_chunk.SetBoolean("AllowTreeAccess", pi.get("allowTreeAccess", True))
-        pi_chunk.SetBoolean("ShowTypeHints", pi.get("showTypeHints", True))
+        pi_chunk.SetString("Name", pi["name"])  # ok
+        pi_chunk.SetString("NickName", pi.get("nickname") or pi["name"])  # ok
+        pi_chunk.SetString("Description", pi.get("description"))  # ok
+        pi_chunk.SetBoolean("Optional", pi.get("optional", True))  # ok
+        pi_chunk.SetBoolean("AllowTreeAccess", pi.get("allowTreeAccess", True))  # ok
+        pi_chunk.SetBoolean("ShowTypeHints", pi.get("showTypeHints", True))  # ok
         pi_chunk.SetInt32(
             "ScriptParamAccess",
-            parse_param_access(pi.get("scriptParamAccess", ACCESS["default"])),
+            parse_param_access(pi.get("scriptParamAccess", ACCESS["default"])),  # ok
         )
-        pi_chunk.SetInt32("SourceCount", 0)
-        pi_chunk.SetGuid("InstanceGuid", input_instance_guid)
-        pi_chunk.SetGuid("TypeHintID", parse_param_type_hint(pi.get("typeHintID")))
+        pi_chunk.SetInt32("SourceCount", 0)  # ok
+        pi_chunk.SetGuid("InstanceGuid", input_instance_guid)  # ok
+        pi_chunk.SetGuid("TypeHintID", parse_param_type_hint(pi.get("typeHintID")))  # ok
         pi_chunk.SetInt32(
             "WireDisplay",
-            parse_wire_display(pi.get("wireDisplay", WIRE_DISPLAY["default"])),
+            parse_wire_display(pi.get("wireDisplay", WIRE_DISPLAY["default"])),  # !! TODO: not sure if not shown by default, for test get out
         )
-        pi_chunk.SetBoolean("ReverseData", pi.get("reverse", False))
-        pi_chunk.SetBoolean("SimplifyData", pi.get("simplify", False))
+        pi_chunk.SetBoolean("ReverseData", pi.get("reverse", False))  # !! TODO: not sure if not shown by default, for test get out
+        pi_chunk.SetBoolean("SimplifyData", pi.get("simplify", False))  # !! TODO: not sure if not shown by default, for test get out
         # Mutually exclusive options
         if pi.get("flatten", False):
-            pi_chunk.SetInt32("Mapping", 1)
+            pi_chunk.SetInt32("Mapping", 1)  # !!
         elif pi.get("graft", False):
-            pi_chunk.SetInt32("Mapping", 2)
+            pi_chunk.SetInt32("Mapping", 2)  # !!
 
+    # ------------------------------
+    # output parameters
     for i, po in enumerate(outputParam):
         output_instance_guid = System.Guid.NewGuid()
-        po_chunk = params.CreateChunk("OutputParam", i)
-        po_chunk.SetString("Name", po["name"])
-        po_chunk.SetString("NickName", po.get("nickname") or po["name"])
-        po_chunk.SetString("Description", po.get("description"))
-        po_chunk.SetBoolean("Optional", po.get("optional", False))
-        po_chunk.SetInt32("SourceCount", 0)
-        po_chunk.SetGuid("InstanceGuid", output_instance_guid)
-        po_chunk.SetBoolean("ReverseData", po.get("reverse", False))
-        po_chunk.SetBoolean("SimplifyData", po.get("simplify", False))
+        po_chunk = params.CreateChunk("OutputParam", i)  # ok
+        po_chunk.SetString("Name", po["name"])  # ok
+        po_chunk.SetString("NickName", po.get("nickname") or po["name"])  # ok
+        po_chunk.SetString("Description", po.get("description"))  # ok
+        po_chunk.SetBoolean("Optional", po.get("optional", False))  # ok
+        po_chunk.SetInt32("SourceCount", 0)  # ok
+        po_chunk.SetGuid("InstanceGuid", output_instance_guid)  # ok
+        po_chunk.SetBoolean("ReverseData", po.get("reverse", False))  # !! TODO: see above
+        po_chunk.SetBoolean("SimplifyData", po.get("simplify", False))  # !!
         # Mutually exclusive options
         if po.get("flatten", False):
-            po_chunk.SetInt32("Mapping", 1)
+            po_chunk.SetInt32("Mapping", 1)  # !!
         elif po.get("graft", False):
-            po_chunk.SetInt32("Mapping", 2)
+            po_chunk.SetInt32("Mapping", 2)  # !!
 
+    # ------------------------------
+    # ------------------------------
+    # Serialization
+    # TODO: test, get rid at merge
     # print(ghpython_root.Serialize_Xml())
+    xml_serialized = ghpython_root.Serialize_Xml()
+    # save to file
+    with open(r"F:\compas-actions.ghpython_components\build\test.xml", "w") as f:
+        f.write(xml_serialized)
+    # ------------------------------
     
     root.SetByteArray("Object", ghpython_root.Serialize_Binary())
 
     System.IO.File.WriteAllBytes(target, root.Serialize_Binary())
+    # ------------------------------
+
 
 
 if __name__ == "__main__":
