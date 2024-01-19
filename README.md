@@ -1,4 +1,3 @@
-# TOERASE-TEST
 # GHPython Componentizer
 
 > A github action to make Grasshopper development 164% <sup><small>[1]</small></sup> version-control friendlier and 82% more pleasant.
