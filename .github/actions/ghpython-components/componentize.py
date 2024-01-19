@@ -14,6 +14,7 @@ import System
 import System.IO
 
 GHPYTHON_SCRIPT_GUID = System.Guid("c9b2d725-6f87-4b07-af90-bd9aefef68eb")  # <<<<<<<<<<<< changed
+# GHPYTHON_SCRIPT_LIB = System.Guid("066d0a87-236f-4eae-a0f4-9e42f5327962")  # ?? test unsure # <<<<<<<<<<<< changed  TODO: to verify if it changes anything in py anc c#
 TEMPLATE_VER = re.compile("{{version}}")
 TEMPLATE_NAME = re.compile("{{name}}")
 TEMPLATE_GHUSER_NAME = re.compile("{{ghuser_name}}")
@@ -245,13 +246,15 @@ def create_ghuser_component(source, target, version=None, prefix=None):
     # ?? :: cannot find it in the serialized xml or ghx
     # !! :: is in ipy but not in cpy
 
-    root.SetGuid("BaseID", GHPYTHON_SCRIPT_GUID)  # ?? TODO: where this comes from? where it goes?
+    # this is the ghuser domain
+    root.SetGuid("BaseID", GHPYTHON_SCRIPT_GUID)  # ok
+    # root.SetGuid("LibID", GHPYTHON_SCRIPT_LIB)  # ?? test unsure
     root.SetString("Name", prefix + data["name"])  # ok
     root.SetString("NickName", data["nickname"])  # ok
     root.SetString("Description", data.get("description", ""))  # ok
-    root.SetInt32("Exposure", data.get("exposure", EXPOSURE["default"]))  # ??
-    root.SetString("Category", data["category"])  # ??
-    root.SetString("SubCategory", data["subcategory"])  # ??
+    root.SetInt32("Exposure", data.get("exposure", EXPOSURE["default"]))  # ok
+    root.SetString("Category", data["category"])  # ok
+    root.SetString("SubCategory", data["subcategory"])  # ok
     root.SetGuid("InstanceGuid", instance_guid)  # ok
     root.SetByteArray("Icon", icon)  # ??
 
@@ -262,24 +265,28 @@ def create_ghuser_component(source, target, version=None, prefix=None):
     ghpython_root = GH_LooseChunk("UserObject")
 
     ghpython_root.SetString("Description", data.get("description", ""))  # ok : this is still in container's items
-    ghpython_root.SetBoolean("HideOutput", ghpython_data.get("hideOutput", True))  # !! this is still in container's items
-    ghpython_root.SetBoolean("HideInput", ghpython_data.get("hideInput", True))  # !! this is still in container's items
-    ghpython_root.SetBoolean(
-        "IsAdvancedMode", ghpython_data.get("isAdvancedMode", False)  # !! this is still in container's items
-    )
-    ghpython_root.SetInt32("IconDisplay", ghpython_data.get("iconDisplay", 0))  # !! this is still in container's items
+    
+    # ghpython_root.SetString("ToolTip", "this is an example of tooltip")  # <<<<<<<<<<<< added FIXME: might not working
+    ghpython_root.SetBoolean("UsingLibraryInputParam", False)  # <<<<<<<<<<<< added (default might stay)
+    ghpython_root.SetBoolean("UsingScriptInputParam", False)  # <<<<<<<<<<<< added (default might stay)
+    ghpython_root.SetBoolean("UsingStandardOutputParam", False)  # <<<<<<<<<<<< added (default might stay)
+
+    # ghpython_root.SetBoolean("HideOutput", ghpython_data.get("hideOutput", True))  # !! this is still in container's items
+    # ghpython_root.SetBoolean("HideInput", ghpython_data.get("hideInput", True))  # !! this is still in container's items
+    # ghpython_root.SetBoolean(
+    #     "IsAdvancedMode", ghpython_data.get("isAdvancedMode", False)  # !! this is still in container's items
+    # )
+    # ghpython_root.SetInt32("IconDisplay", ghpython_data.get("iconDisplay", 0))  # !! this is still in container's items
+    
     ghpython_root.SetString("Name", data["name"])  # ok
     ghpython_root.SetString("NickName", data["nickname"])  # ok
-    ghpython_root.SetBoolean(
-        "MarshalOutGuids", ghpython_data.get("marshalOutGuids", True)  # **!! it changed to "MarshalGuids" in cpy
-    )
 
-    # ------------------------------
-    # code
+    # ghpython_root.SetBoolean(
+    #     "MarshalOutGuids", ghpython_data.get("marshalOutGuids", True)  # **!! it changed to "MarshalGuids" in cpy
+    # )
+    ghpython_root.SetBoolean("MarshalGuids", True)  # <<<<<<<<<<<< added (TODO: default value to replace)
 
-    # FIXME: does not exist anymore, need a new chunk
-    ghpython_root.SetString("CodeInput", code)
-    print("CodeInput", code)
+    
 
     # ------------------------------
     # ------------------------------
@@ -323,7 +330,7 @@ def create_ghuser_component(source, target, version=None, prefix=None):
         )
         pi_chunk.SetInt32("SourceCount", 0)  # ok
         pi_chunk.SetGuid("InstanceGuid", input_instance_guid)  # ok
-        pi_chunk.SetGuid("TypeHintID", parse_param_type_hint(pi.get("typeHintID")))  # ok
+        # pi_chunk.SetGuid("TypeHintID", parse_param_type_hint(pi.get("typeHintID")))  # ok
         pi_chunk.SetInt32(
             "WireDisplay",
             parse_wire_display(pi.get("wireDisplay", WIRE_DISPLAY["default"])),  # !! TODO: not sure if not shown by default, for test get out
@@ -332,9 +339,9 @@ def create_ghuser_component(source, target, version=None, prefix=None):
         pi_chunk.SetBoolean("SimplifyData", pi.get("simplify", False))  # !! TODO: not sure if not shown by default, for test get out
         # Mutually exclusive options
         if pi.get("flatten", False):
-            pi_chunk.SetInt32("Mapping", 1)  # !!
+            pi_chunk.SetInt32("Mapping", 1)  # !! TODO: not sure if not shown by default, for test get out
         elif pi.get("graft", False):
-            pi_chunk.SetInt32("Mapping", 2)  # !!
+            pi_chunk.SetInt32("Mapping", 2)  # !! TODO: not sure if not shown by default, for test get out
 
     # ------------------------------
     # output parameters
@@ -347,13 +354,29 @@ def create_ghuser_component(source, target, version=None, prefix=None):
         po_chunk.SetBoolean("Optional", po.get("optional", False))  # ok
         po_chunk.SetInt32("SourceCount", 0)  # ok
         po_chunk.SetGuid("InstanceGuid", output_instance_guid)  # ok
+
         po_chunk.SetBoolean("ReverseData", po.get("reverse", False))  # !! TODO: see above
-        po_chunk.SetBoolean("SimplifyData", po.get("simplify", False))  # !!
+        po_chunk.SetBoolean("SimplifyData", po.get("simplify", False))  # !! TODO: see above
         # Mutually exclusive options
         if po.get("flatten", False):
-            po_chunk.SetInt32("Mapping", 1)  # !!
+            po_chunk.SetInt32("Mapping", 1)  # !! TODO: see above
         elif po.get("graft", False):
-            po_chunk.SetInt32("Mapping", 2)  # !!
+            po_chunk.SetInt32("Mapping", 2)  # !! TODO: see above
+
+    # ------------------------------
+    # code
+
+    # FIXME: does not exist anymore, need a new chunk
+    script = ghpython_root.CreateChunk("Script")
+    # TODO: here the  code from the component needs to go in base64
+    script.SetString("Text", "IiIiVGhpcyBpcyBhIG5ldyBzY3JpcHQgaW5zdGFuY2UiIiINCmltcG9ydCBTeXN0ZW0NCmltcG9ydCBSaGlubw0KaW1wb3J0IEdyYXNzaG9wcGVyDQoNCmltcG9ydCByaGlub3NjcmlwdHN5bnRheCBhcyBycw0KDQoNCmNsYXNzIE15Q29tcG9uZW50KEdyYXNzaG9wcGVyLktlcm5lbC5HSF9TY3JpcHRJbnN0YW5jZSk6DQogICAgZGVmIFJ1blNjcmlwdChzZWxmLCBjb21wYXNuZXdfeCwgeSk6DQogICAgICAgICIiIkdyYXNzaG9wcGVyIFNjcmlwdCBjb21wYXMgYWN0aW9uIiIiDQogICAgICAgIGEgPSAiSGVsbG8gUHl0aG9uIDMgaW4gR3Jhc3Nob3BwZXIhIg0KICAgICAgICBwcmludChhKQ0KICAgICAgICANCiAgICAgICAgcmV0dXJuDQo=")
+    script.SetString("Title", "S")
+
+    language_spec = ghpython_root.CreateChunk("LanguageSpec")
+    language_spec.SetString("Taxon", "mcneel.pythonnet.python")
+    language_spec.SetString("Version", "3.9.10")  # TODO: the version might be a parameter
+
+    # print("CodeInput", code)
 
     # ------------------------------
     # ------------------------------

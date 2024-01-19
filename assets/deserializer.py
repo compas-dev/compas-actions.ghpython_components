@@ -18,7 +18,9 @@ import System.IO
 
 def main():
     from GH_IO.Serialization import GH_LooseChunk
-    ghuser_path : str = r"F:\compas-actions.ghpython_components\temp\TestUserObjectCpy.ghuser"
+    
+    # ghuser_path : str = r"F:\compas-actions.ghpython_components\assets\TestUserObjectCpy.ghuser"  # cpy
+    ghuser_path : str = r"F:\compas-actions.ghpython_components\build\Test_KitchenSink.ghuser"    # ipy
     
     deserialized_data = GH_LooseChunk("UserObject")
 
@@ -36,9 +38,8 @@ def main():
     # convert to xml
     xml = deserialized_data.Serialize_Xml()
 
+
     print(xml)
-
-
 
 
 
@@ -49,7 +50,5 @@ if "__main__" == __name__:
     gh_io = os.path.abspath(gh_io)
     gh_io = gh_io[:-4]
     clr.AddReference(gh_io)
-
-
 
     main()
