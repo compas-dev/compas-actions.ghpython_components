@@ -13,6 +13,8 @@ import clr
 import System
 import System.IO
 
+# 1. x failed to find Type Hint. Using "No Type Hint" instead. (Missing Hint: 87f87f55-5b71-41f4-8aea-21d494016f81)
+
 GHPYTHON_SCRIPT_GUID = System.Guid("c9b2d725-6f87-4b07-af90-bd9aefef68eb")  # <<<<<<<<<<<< changed
 # GHPYTHON_SCRIPT_LIB = System.Guid("066d0a87-236f-4eae-a0f4-9e42f5327962")  # ?? test unsure # <<<<<<<<<<<< changed  TODO: to verify if it changes anything in py anc c#
 TEMPLATE_VER = re.compile("{{version}}")
@@ -21,9 +23,9 @@ TEMPLATE_GHUSER_NAME = re.compile("{{ghuser_name}}")
 
 # TODO: we might want to double check this list if the guid are the same in Rhino 8
 TYPES_MAP = dict(
-    none="35915213-5534-4277-81b8-1bdc9e7383d2",
-    ghdoc="87f87f55-5b71-41f4-8aea-21d494016f81",
-    float="39fbc626-7a01-46ab-a18e-ec1c0c41685b",
+    none="6a184b65-baa3-42d1-a548-3915b401de53",  # <<<<<<<<<<<< changed
+    ghdoc="1c282eeb-dd16-439f-94e4-7d92b542fe8b",  # <<<<<<<<<<<< changed
+    float="9d51e32e-c038-4352-9554-f4137ca91b9a",  # <<<<<<<<<<<< changed
     bool="d60527f5-b5af-4ef6-8970-5f96fe412559",
     int="48d01794-d3d8-4aef-990e-127168822244",
     complex="309690df-6229-4774-91bb-b1c9c0bfa54d",
@@ -48,7 +50,7 @@ TYPES_MAP = dict(
     surface="f4070a37-c822-410f-9057-100d2e22a22d",
     subd="20f4ca9c-6c90-4fd6-ba8a-5bf9ca79db08",
     brep="2ceb0405-fdfe-403d-a4d6-8786da45fb9d",
-    geometrybase="c37956f4-d39c-49c7-af71-1e87f8031b26",
+    geometrybase="c37956f4-d39c-49c7-af71-1e87f8031b26"
 )
 
 #TODO: double check, don't know this param
@@ -297,6 +299,9 @@ def create_ghuser_component(source, target, version=None, prefix=None):
 
     # ------------------------------
     # ------------------------------
+    # FIXME: here the component gives back this error:
+    # 1. Error running script: Unable to cast object of type 'Grasshopper.Kernel.Parameters.Param_String' to type 'RhinoCodePluginGH.Parameters.ScriptVariableParam'.
+    # needs to change the type of the parameters for both input and output
     # parameters
     params = ghpython_root.CreateChunk("ParameterData")  # ok
     inputParam = ghpython_data.get("inputParameters", [])  # ok
@@ -305,13 +310,14 @@ def create_ghuser_component(source, target, version=None, prefix=None):
     params.SetInt32("InputCount", len(inputParam))  # ok
     for i, _pi in enumerate(inputParam):
         params.SetGuid(
-            "InputId", i, System.Guid.Parse("08908df5-fa14-4982-9ab2-1aa0927566aa")  # ok <<<<<<<<<<<< changed
+            "InputId", i, System.Guid.Parse("08908df5-fa14-4982-9ab2-1aa0927566aa")  # ?? <<<<<<<<<<<< changed ??
         )
     params.SetInt32("OutputCount", len(outputParam))  # ok
     for i, _po in enumerate(outputParam):
         params.SetGuid(
-            "OutputId", i, System.Guid.Parse("3ede854e-c753-40eb-84cb-b48008f14fd4")  # ok <<<<<<<<<<<< changed
+            "OutputId", i, System.Guid.Parse("08908df5-fa14-4982-9ab2-1aa0927566aa")  # ?? <<<<<<<<<<<< changed ??
         )
+    # FIXME: the "out" guis is 3ede854e-c753-40eb-84cb-b48008f14fd4 to replace up if you want to add it
 
     # ------------------------------
     # input parameters
@@ -330,7 +336,7 @@ def create_ghuser_component(source, target, version=None, prefix=None):
         )
         pi_chunk.SetInt32("SourceCount", 0)  # ok
         pi_chunk.SetGuid("InstanceGuid", input_instance_guid)  # ok
-        # pi_chunk.SetGuid("TypeHintID", parse_param_type_hint(pi.get("typeHintID")))  # ok
+        pi_chunk.SetGuid("TypeHintID", parse_param_type_hint(pi.get("typeHintID")))  # ok FIXME: this one is maybe to modify
         pi_chunk.SetInt32(
             "WireDisplay",
             parse_wire_display(pi.get("wireDisplay", WIRE_DISPLAY["default"])),  # !! TODO: not sure if not shown by default, for test get out
@@ -353,7 +359,12 @@ def create_ghuser_component(source, target, version=None, prefix=None):
         po_chunk.SetString("Description", po.get("description"))  # ok
         po_chunk.SetBoolean("Optional", po.get("optional", False))  # ok
         po_chunk.SetInt32("SourceCount", 0)  # ok
+
+        # po_chunk.SetGuid("TypeHintID", System.Guid.Parse("0b057941-4ed8-4cde-9c90-bacf7ba51cb7"))
+
         po_chunk.SetGuid("InstanceGuid", output_instance_guid)  # ok
+        # FIXME: here the param hint needs to be added/modified
+        
 
         po_chunk.SetBoolean("ReverseData", po.get("reverse", False))  # !! TODO: see above
         po_chunk.SetBoolean("SimplifyData", po.get("simplify", False))  # !! TODO: see above
@@ -369,10 +380,11 @@ def create_ghuser_component(source, target, version=None, prefix=None):
     # FIXME: does not exist anymore, need a new chunk
     script = ghpython_root.CreateChunk("Script")
     # TODO: here the  code from the component needs to go in base64
+    code = base64.b64encode(code.encode("utf-8"))
     script.SetString("Text", "IiIiVGhpcyBpcyBhIG5ldyBzY3JpcHQgaW5zdGFuY2UiIiINCmltcG9ydCBTeXN0ZW0NCmltcG9ydCBSaGlubw0KaW1wb3J0IEdyYXNzaG9wcGVyDQoNCmltcG9ydCByaGlub3NjcmlwdHN5bnRheCBhcyBycw0KDQoNCmNsYXNzIE15Q29tcG9uZW50KEdyYXNzaG9wcGVyLktlcm5lbC5HSF9TY3JpcHRJbnN0YW5jZSk6DQogICAgZGVmIFJ1blNjcmlwdChzZWxmLCBjb21wYXNuZXdfeCwgeSk6DQogICAgICAgICIiIkdyYXNzaG9wcGVyIFNjcmlwdCBjb21wYXMgYWN0aW9uIiIiDQogICAgICAgIGEgPSAiSGVsbG8gUHl0aG9uIDMgaW4gR3Jhc3Nob3BwZXIhIg0KICAgICAgICBwcmludChhKQ0KICAgICAgICANCiAgICAgICAgcmV0dXJuDQo=")
     script.SetString("Title", "S")
 
-    language_spec = ghpython_root.CreateChunk("LanguageSpec")
+    language_spec = script.CreateChunk("LanguageSpec")
     language_spec.SetString("Taxon", "mcneel.pythonnet.python")
     language_spec.SetString("Version", "3.9.10")  # TODO: the version might be a parameter
 
