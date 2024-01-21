@@ -1,14 +1,11 @@
 name: build
-on:
-  push:
-    branches:
-      - cpy_dev  # TODO: to erase once merged
-      - main
+
+on: [push]
 
 jobs:
   build_ghuser_components:
+    name: windows-cpython
     runs-on: windows-latest
-    name: Build components
     steps:
       - uses: actions/checkout@v2
       - uses: NuGet/setup-nuget@v1.0.5
@@ -20,7 +17,9 @@ jobs:
       - name: Install pythonnet
         run: |
           pip install pythonnet
-      - uses: ./.github/actions/ghpython-components
+
+      - name: Run the action in root
+        uses: ./action
         with:
           source: examples
           target: build
