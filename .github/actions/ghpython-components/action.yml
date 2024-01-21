@@ -20,7 +20,7 @@ runs:
     - run: |
         $command="python"
         $params="${{ github.action_path }}/componentize.py", "${{ inputs.source }}", "${{ inputs.target }}", "--ghio", "./lib"
-        $prefix="${{ inputs.prefix }}"      
+        $prefix="${{ inputs.prefix }}"
         if( $prefix )
         {
           $params=$params + "--prefix", "$prefix"
