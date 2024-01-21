@@ -13,47 +13,42 @@ import clr
 import System
 import System.IO
 
-# 1. x failed to find Type Hint. Using "No Type Hint" instead. (Missing Hint: 87f87f55-5b71-41f4-8aea-21d494016f81)
-
 GHPYTHON_SCRIPT_GUID = System.Guid("c9b2d725-6f87-4b07-af90-bd9aefef68eb")  # <<<<<<<<<<<< changed
-# GHPYTHON_SCRIPT_LIB = System.Guid("066d0a87-236f-4eae-a0f4-9e42f5327962")  # ?? test unsure # <<<<<<<<<<<< changed  TODO: to verify if it changes anything in py anc c#
 TEMPLATE_VER = re.compile("{{version}}")
 TEMPLATE_NAME = re.compile("{{name}}")
 TEMPLATE_GHUSER_NAME = re.compile("{{ghuser_name}}")
 
-# TODO: we might want to double check this list if the guid are the same in Rhino 8
 TYPES_MAP = dict(
     none="6a184b65-baa3-42d1-a548-3915b401de53",  # <<<<<<<<<<<< changed
     ghdoc="1c282eeb-dd16-439f-94e4-7d92b542fe8b",  # <<<<<<<<<<<< changed
     float="9d51e32e-c038-4352-9554-f4137ca91b9a",  # <<<<<<<<<<<< changed
-    bool="d60527f5-b5af-4ef6-8970-5f96fe412559",
-    int="48d01794-d3d8-4aef-990e-127168822244",
-    complex="309690df-6229-4774-91bb-b1c9c0bfa54d",
-    str="37261734-eec7-4f50-b6a8-b8d1f3c4396b",
-    datetime="09bcf900-fe83-4efa-8d32-33d89f7a3e66",
-    guid="5325b8e1-51d7-4d36-837a-d98394626c35",
-    color="24b1d1a3-ab79-498c-9e44-c5b14607c4d3",
-    point="e1937b56-b1da-4c12-8bd8-e34ee81746ef",
-    vector="15a50725-e3d3-4075-9f7c-142ba5f40747",
-    plane="3897522d-58e9-4d60-b38c-978ddacfedd8",
-    interval="589748aa-e558-4dd9-976f-78e3ab91fc77",
-    uvinterval="74c906f3-db02-4cea-bd58-de375cb5ae73",
-    box="f29cb021-de79-4e63-9f04-fc8e0df5f8b6",
-    transform="c4b38e4c-21ff-415f-a0d1-406d282428dd",
-    line="f802a8cd-e699-4a94-97ea-83b5406271de",
-    circle="3c5409a1-3293-4181-a6fa-c24c37fc0c32",
-    arc="9c80ec18-b48c-41b0-bc6e-cd93d9c916aa",
-    polyline="66fa617b-e3e8-4480-9f1e-2c0688c1d21b",
-    rectangle="83da014b-a550-4bf5-89ff-16e54225bd5d",
-    curve="9ba89ec2-5315-435f-a621-b66c5fa2f301",
-    mesh="794a1f9d-21d5-4379-b987-9e8bbf433912",
-    surface="f4070a37-c822-410f-9057-100d2e22a22d",
-    subd="20f4ca9c-6c90-4fd6-ba8a-5bf9ca79db08",
-    brep="2ceb0405-fdfe-403d-a4d6-8786da45fb9d",
-    geometrybase="c37956f4-d39c-49c7-af71-1e87f8031b26"
+    bool="d60527f5-b5af-4ef6-8970-5f96fe412559",  # <<<<<<<<<<<< same
+    int="48d01794-d3d8-4aef-990e-127168822244",  # <<<<<<<<<<<< sasme
+    complex="309690df-6229-4774-91bb-b1c9c0bfa54d",  # <<<<<<<<<<<< same
+    str="3aceb454-6dbd-4c5b-9b6b-e71f8c1cdf88",  # <<<<<<<<<<<< changed
+    datetime="09bcf900-fe83-4efa-8d32-33d89f7a3e66",  # <<<<<<<<<<<< same
+    guid="5325b8e1-51d7-4d36-837a-d98394626c35",  # <<<<<<<<<<<< same
+    color="24b1d1a3-ab79-498c-9e44-c5b14607c4d3",  # <<<<<<<<<<<< same
+    point="e1937b56-b1da-4c12-8bd8-e34ee81746ef",  # <<<<<<<<<<<< same
+    vector="15a50725-e3d3-4075-9f7c-142ba5f40747",  # <<<<<<<<<<<< same
+    plane="3897522d-58e9-4d60-b38c-978ddacfedd8",  # <<<<<<<<<<<< same
+    interval="589748aa-e558-4dd9-976f-78e3ab91fc77",  # <<<<<<<<<<<< same
+    uvinterval="74c906f3-db02-4cea-bd58-de375cb5ae73",  # <<<<<<<<<<<< same
+    box="f29cb021-de79-4e63-9f04-fc8e0df5f8b6",  # <<<<<<<<<<<< same
+    transform="c4b38e4c-21ff-415f-a0d1-406d282428dd",  # <<<<<<<<<<<< same
+    line="f802a8cd-e699-4a94-97ea-83b5406271de",  # <<<<<<<<<<<< same
+    circle="3c5409a1-3293-4181-a6fa-c24c37fc0c32",  # <<<<<<<<<<<< same
+    arc="9c80ec18-b48c-41b0-bc6e-cd93d9c916aa",  # <<<<<<<<<<<< same
+    polyline="66fa617b-e3e8-4480-9f1e-2c0688c1d21b",  # <<<<<<<<<<<< same
+    rectangle="83da014b-a550-4bf5-89ff-16e54225bd5d",  # <<<<<<<<<<<< same
+    curve="9ba89ec2-5315-435f-a621-b66c5fa2f301",  # <<<<<<<<<<<< same
+    mesh="794a1f9d-21d5-4379-b987-9e8bbf433912",  # <<<<<<<<<<<< same
+    surface="f4070a37-c822-410f-9057-100d2e22a22d",  # <<<<<<<<<<<< same
+    subd="20f4ca9c-6c90-4fd6-ba8a-5bf9ca79db08",  # <<<<<<<<<<<< same
+    brep="2ceb0405-fdfe-403d-a4d6-8786da45fb9d",  # <<<<<<<<<<<< same
+    geometrybase="c37956f4-d39c-49c7-af71-1e87f8031b26"  # <<<<<<<<<<<< same
 )
 
-#TODO: double check, don't know this param
 EXPOSURE = dict(valid=set([-1, 2, 4, 8, 16, 32, 64, 128]), default=2)
 ACCESS = dict(valid=set([0, 1, 2]), map=dict(item=0, list=1, tree=2), default=0)
 PARAM_TYPE = dict(
@@ -317,7 +312,8 @@ def create_ghuser_component(source, target, version=None, prefix=None):
         params.SetGuid(
             "OutputId", i, System.Guid.Parse("08908df5-fa14-4982-9ab2-1aa0927566aa")  # ?? <<<<<<<<<<<< changed ??
         )
-    # FIXME: the "out" guis is 3ede854e-c753-40eb-84cb-b48008f14fd4 to replace up if you want to add it
+    # FIXME: the "out" guis is 3ede854e-c753-40eb-84cb-b48008f14fd4 to replace up if you want to add it :
+    # here we could add a "out" parameter as an option to be set in the metadata.json <<<<
 
     # ------------------------------
     # input parameters
