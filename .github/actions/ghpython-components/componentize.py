@@ -15,7 +15,7 @@ import System.IO
 
 
 GHPYTHON_SCRIPT_GUID = System.Guid("c9b2d725-6f87-4b07-af90-bd9aefef68eb")
-CPY_VER = "3.9.10"
+CPY_VER = "3.-1"
 TEMPLATE_VER = re.compile("{{version}}")
 TEMPLATE_NAME = re.compile("{{name}}")
 TEMPLATE_GHUSER_NAME = re.compile("{{ghuser_name}}")
@@ -215,6 +215,7 @@ def replace_templates(code, version, name, ghuser_name):
 
     return code
 
+
 def create_ghuser_component(source, target, version=None, prefix=None):
     from GH_IO.Serialization import GH_LooseChunk
 
@@ -240,12 +241,13 @@ def create_ghuser_component(source, target, version=None, prefix=None):
     root.SetString("SubCategory", data["subcategory"])
     root.SetGuid("InstanceGuid", instance_guid)
     root.SetByteArray("Icon", icon)
-    # FIXME: needs to override icon display
 
     ghpython_data = data["ghpython"]
 
     ghpython_root = GH_LooseChunk("UserObject")
     ghpython_root.SetString("Description", data.get("description", ""))
+    bitmap_icon = System.Drawing.Bitmap.FromStream(System.IO.MemoryStream(icon))
+    ghpython_root.SetDrawingBitmap("IconOverride", bitmap_icon)
     ghpython_root.SetBoolean("UsingLibraryInputParam", False)
     ghpython_root.SetBoolean("UsingScriptInputParam", False)
     ghpython_root.SetBoolean("UsingStandardOutputParam", False)
@@ -253,8 +255,6 @@ def create_ghuser_component(source, target, version=None, prefix=None):
     ghpython_root.SetString("Name", data["name"])
     ghpython_root.SetString("NickName", data["nickname"])
     ghpython_root.SetBoolean("MarshalGuids", ghpython_data.get("marshalGuids", True))
-    # TODO: add ToolTip/gh_string
-
 
     # ghpython_root.CreateChunk('Attributes')
     # for mf in ('Bounds', 'Pivot', 'Selected'):
@@ -319,32 +319,12 @@ def create_ghuser_component(source, target, version=None, prefix=None):
 
     script = ghpython_root.CreateChunk("Script")
 
-
-    # import marshal
-    # code_binary = marshal.dumps(compile(code, "<string>", "exec"))
-
-    # code_binary = System.Text.Encoding.UTF8.GetBytes(code)  # ipy
-    
-    code_base64 = base64.b64encode(code.encode("utf-8"))  # cpy
-    print(code_base64)
-
-    # get rid of the b' and ' at the beginning and end of the string
+    code_base64 = base64.b64encode(code.encode("utf-8"))
     code_base64 = str(code_base64)[2:-1]
-
-    script.SetString("Text", f"{code_base64}")
-    # script.SetString("Text", "IiIiCkRvIHNvbWV0aGluZyBzaWxseS4KClRoaXMgY29tcG9uZW50IGRvZXMgbm90aGluZyB1c2VmdWwsIGl0J3Mgb25seSBhIG1pbmltYWwgZXhhbXBsZS4KCiAgICBBcmdzOgogICAgICAgIHg6IFggdmFsdWUKICAgICAgICB5OiBZIHZhbHVlCiAgICAgICAgejogWiB2YWx1ZQogICAgUmV0dXJuczoKICAgICAgICBhOiBUaGUgc3VtIG9mIGFsbCB0aHJlZSB2YWx1ZXMuCiIiIgoKZnJvbSBnaHB5dGhvbmxpYi5jb21wb25lbnRiYXNlIGltcG9ydCBleGVjdXRpbmdjb21wb25lbnQgYXMgY29tcG9uZW50CgpjbGFzcyBNaW5pbWFsU2RrQ29tcG9uZW50KGNvbXBvbmVudCk6CiAgICBkZWYgUnVuU2NyaXB0KHNlbGYsIHgsIHksIHopOgogICAgICAgIHNlbGYuTWVzc2FnZSA9ICdDT01QT05FTlQgdnt7dmVyc2lvbn19JwogICAgICAgIHJldHVybiAoeCArIHkgKyB6KQo=")
-    # FIXME: solve the encoding because it set to script
-    # script.SetString("Text", "IiIiVGhpcyBpcyBhIG5ldyBzY3JpcHQgaW5zdGFuY2UiIiINCmltcG9ydCBTeXN0ZW0NCmltcG9ydCBSaGlubw0KaW1wb3J0IEdyYXNzaG9wcGVyDQoNCmltcG9ydCByaGlub3NjcmlwdHN5bnRheCBhcyBycw0KDQoNCmNsYXNzIE15Q29tcG9uZW50KEdyYXNzaG9wcGVyLktlcm5lbC5HSF9TY3JpcHRJbnN0YW5jZSk6DQogICAgZGVmIFJ1blNjcmlwdChzZWxmLCBjb21wYXNuZXdfeCwgeSk6DQogICAgICAgICIiIkdyYXNzaG9wcGVyIFNjcmlwdCBjb21wYXMgYWN0aW9uIiIiDQogICAgICAgIGEgPSAiSGVsbG8gUHl0aG9uIDMgaW4gR3Jhc3Nob3BwZXIhIg0KICAgICAgICBwcmludChhKQ0KICAgICAgICANCiAgICAgICAgcmV0dXJuDQo=")
-    
-    # convert this base64 to string:
-    # code2convert = "IiIiVGhpcyBpcyBhIG5ldyBzY3JpcHQgaW5zdGFuY2UiIiINCmltcG9ydCBTeXN0ZW0NCmltcG9ydCBSaGlubw0KaW1wb3J0IEdyYXNzaG9wcGVyDQoNCmltcG9ydCByaGlub3NjcmlwdHN5bnRheCBhcyBycw0KDQoNCmNsYXNzIE15Q29tcG9uZW50KEdyYXNzaG9wcGVyLktlcm5lbC5HSF9TY3JpcHRJbnN0YW5jZSk6DQogICAgZGVmIFJ1blNjcmlwdChzZWxmLCBjb21wYXNuZXdfeCwgeSk6DQogICAgICAgICIiIkdyYXNzaG9wcGVyIFNjcmlwdCBjb21wYXMgYWN0aW9uIiIiDQogICAgICAgIGEgPSAiSGVsbG8gUHl0aG9uIDMgaW4gR3Jhc3Nob3BwZXIhIg0KICAgICAgICBwcmludChhKQ0KICAgICAgICANCiAgICAgICAgcmV0dXJuDQo="
-    # code2convert = base64.b64decode(code2convert).decode("utf-8")
-    # # print(code2convert)
-
-    script.SetString("Title", "S")  # FIXME:to parametrize
-
+    script.SetString("Text", code_base64)
+    script.SetString("Title", "S")
     language_spec = script.CreateChunk("LanguageSpec")
-    language_spec.SetString("Taxon", "mcneel.pythonnet.python")
+    language_spec.SetString("Taxon", "*.*.python")
     language_spec.SetString("Version", CPY_VER)
 
     # xml_serialized = ghpython_root.Serialize_Xml()
@@ -409,7 +389,6 @@ if __name__ == "__main__":
         os.mkdir(targetdir)
     print("[x]")
 
-    # print("[ ] GH_IO assembly: {}\r".format(gh_io or args.ghio), end="")
     if not gh_io:
         print("[-]  Cannot find GH_IO Assembly! Aborting.")
         sys.exit(-1)
