@@ -18,8 +18,8 @@ jobs:
         run: |
           pip install pythonnet
 
-      - name: Run the action in root
-        uses: ./action
+      - name: Run
+        uses: ./
         with:
           source: examples
           target: build
