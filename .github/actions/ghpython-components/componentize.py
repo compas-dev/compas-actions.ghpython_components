@@ -13,40 +13,42 @@ import clr
 import System
 import System.IO
 
-GHPYTHON_SCRIPT_GUID = System.Guid("c9b2d725-6f87-4b07-af90-bd9aefef68eb")  # <<<<<<<<<<<< changed
+
+GHPYTHON_SCRIPT_GUID = System.Guid("c9b2d725-6f87-4b07-af90-bd9aefef68eb")
+CPY_VER = "3.9.10"
 TEMPLATE_VER = re.compile("{{version}}")
 TEMPLATE_NAME = re.compile("{{name}}")
 TEMPLATE_GHUSER_NAME = re.compile("{{ghuser_name}}")
 
 TYPES_MAP = dict(
-    none="6a184b65-baa3-42d1-a548-3915b401de53",  # <<<<<<<<<<<< changed
-    ghdoc="1c282eeb-dd16-439f-94e4-7d92b542fe8b",  # <<<<<<<<<<<< changed
-    float="9d51e32e-c038-4352-9554-f4137ca91b9a",  # <<<<<<<<<<<< changed
-    bool="d60527f5-b5af-4ef6-8970-5f96fe412559",  # <<<<<<<<<<<< same
-    int="48d01794-d3d8-4aef-990e-127168822244",  # <<<<<<<<<<<< sasme
-    complex="309690df-6229-4774-91bb-b1c9c0bfa54d",  # <<<<<<<<<<<< same
-    str="3aceb454-6dbd-4c5b-9b6b-e71f8c1cdf88",  # <<<<<<<<<<<< changed
-    datetime="09bcf900-fe83-4efa-8d32-33d89f7a3e66",  # <<<<<<<<<<<< same
-    guid="5325b8e1-51d7-4d36-837a-d98394626c35",  # <<<<<<<<<<<< same
-    color="24b1d1a3-ab79-498c-9e44-c5b14607c4d3",  # <<<<<<<<<<<< same
-    point="e1937b56-b1da-4c12-8bd8-e34ee81746ef",  # <<<<<<<<<<<< same
-    vector="15a50725-e3d3-4075-9f7c-142ba5f40747",  # <<<<<<<<<<<< same
-    plane="3897522d-58e9-4d60-b38c-978ddacfedd8",  # <<<<<<<<<<<< same
-    interval="589748aa-e558-4dd9-976f-78e3ab91fc77",  # <<<<<<<<<<<< same
-    uvinterval="74c906f3-db02-4cea-bd58-de375cb5ae73",  # <<<<<<<<<<<< same
-    box="f29cb021-de79-4e63-9f04-fc8e0df5f8b6",  # <<<<<<<<<<<< same
-    transform="c4b38e4c-21ff-415f-a0d1-406d282428dd",  # <<<<<<<<<<<< same
-    line="f802a8cd-e699-4a94-97ea-83b5406271de",  # <<<<<<<<<<<< same
-    circle="3c5409a1-3293-4181-a6fa-c24c37fc0c32",  # <<<<<<<<<<<< same
-    arc="9c80ec18-b48c-41b0-bc6e-cd93d9c916aa",  # <<<<<<<<<<<< same
-    polyline="66fa617b-e3e8-4480-9f1e-2c0688c1d21b",  # <<<<<<<<<<<< same
-    rectangle="83da014b-a550-4bf5-89ff-16e54225bd5d",  # <<<<<<<<<<<< same
-    curve="9ba89ec2-5315-435f-a621-b66c5fa2f301",  # <<<<<<<<<<<< same
-    mesh="794a1f9d-21d5-4379-b987-9e8bbf433912",  # <<<<<<<<<<<< same
-    surface="f4070a37-c822-410f-9057-100d2e22a22d",  # <<<<<<<<<<<< same
-    subd="20f4ca9c-6c90-4fd6-ba8a-5bf9ca79db08",  # <<<<<<<<<<<< same
-    brep="2ceb0405-fdfe-403d-a4d6-8786da45fb9d",  # <<<<<<<<<<<< same
-    geometrybase="c37956f4-d39c-49c7-af71-1e87f8031b26"  # <<<<<<<<<<<< same
+    none="6a184b65-baa3-42d1-a548-3915b401de53",
+    ghdoc="1c282eeb-dd16-439f-94e4-7d92b542fe8b",
+    float="9d51e32e-c038-4352-9554-f4137ca91b9a",
+    bool="d60527f5-b5af-4ef6-8970-5f96fe412559",
+    int="48d01794-d3d8-4aef-990e-127168822244",
+    complex="309690df-6229-4774-91bb-b1c9c0bfa54d",
+    str="3aceb454-6dbd-4c5b-9b6b-e71f8c1cdf88",
+    datetime="09bcf900-fe83-4efa-8d32-33d89f7a3e66",
+    guid="5325b8e1-51d7-4d36-837a-d98394626c35",
+    color="24b1d1a3-ab79-498c-9e44-c5b14607c4d3",
+    point="e1937b56-b1da-4c12-8bd8-e34ee81746ef",
+    vector="15a50725-e3d3-4075-9f7c-142ba5f40747",
+    plane="3897522d-58e9-4d60-b38c-978ddacfedd8",
+    interval="589748aa-e558-4dd9-976f-78e3ab91fc77",
+    uvinterval="74c906f3-db02-4cea-bd58-de375cb5ae73",
+    box="f29cb021-de79-4e63-9f04-fc8e0df5f8b6",
+    transform="c4b38e4c-21ff-415f-a0d1-406d282428dd",
+    line="f802a8cd-e699-4a94-97ea-83b5406271de",
+    circle="3c5409a1-3293-4181-a6fa-c24c37fc0c32",
+    arc="9c80ec18-b48c-41b0-bc6e-cd93d9c916aa",
+    polyline="66fa617b-e3e8-4480-9f1e-2c0688c1d21b",
+    rectangle="83da014b-a550-4bf5-89ff-16e54225bd5d",
+    curve="9ba89ec2-5315-435f-a621-b66c5fa2f301",
+    mesh="794a1f9d-21d5-4379-b987-9e8bbf433912",
+    surface="f4070a37-c822-410f-9057-100d2e22a22d",
+    subd="20f4ca9c-6c90-4fd6-ba8a-5bf9ca79db08",
+    brep="2ceb0405-fdfe-403d-a4d6-8786da45fb9d",
+    geometrybase="c37956f4-d39c-49c7-af71-1e87f8031b26"
 )
 
 EXPOSURE = dict(valid=set([-1, 2, 4, 8, 16, 32, 64, 128]), default=2)
@@ -213,7 +215,6 @@ def replace_templates(code, version, name, ghuser_name):
 
     return code
 
-# FIXME: main function to port for GHUser in Python3
 def create_ghuser_component(source, target, version=None, prefix=None):
     from GH_IO.Serialization import GH_LooseChunk
 
@@ -221,7 +222,6 @@ def create_ghuser_component(source, target, version=None, prefix=None):
 
     code = replace_templates(code, version, data["name"], os.path.basename(target))
 
-    # new guid
     instance_guid = data.get("instanceGuid")
     if not instance_guid:
         instance_guid = System.Guid.NewGuid()
@@ -230,178 +230,126 @@ def create_ghuser_component(source, target, version=None, prefix=None):
 
     prefix = prefix or ""
 
-    # ------------------------------
-    # ------------------------------
-    # root
     root = GH_LooseChunk("UserObject")
+    root.SetGuid("BaseID", GHPYTHON_SCRIPT_GUID)
+    root.SetString("Name", prefix + data["name"])
+    root.SetString("NickName", data["nickname"])
+    root.SetString("Description", data.get("description", ""))
+    root.SetInt32("Exposure", data.get("exposure", EXPOSURE["default"]))
+    root.SetString("Category", data["category"])
+    root.SetString("SubCategory", data["subcategory"])
+    root.SetGuid("InstanceGuid", instance_guid)
+    root.SetByteArray("Icon", icon)
+    # FIXME: needs to override icon display
 
-    # ------------------------------
-    # main object chunk (root)
-
-    # LEGEND:
-    # ok :: is in bth ipy and cpy
-    # ?? :: cannot find it in the serialized xml or ghx
-    # !! :: is in ipy but not in cpy
-
-    # this is the ghuser domain
-    root.SetGuid("BaseID", GHPYTHON_SCRIPT_GUID)  # ok
-    # root.SetGuid("LibID", GHPYTHON_SCRIPT_LIB)  # ?? test unsure
-    root.SetString("Name", prefix + data["name"])  # ok
-    root.SetString("NickName", data["nickname"])  # ok
-    root.SetString("Description", data.get("description", ""))  # ok
-    root.SetInt32("Exposure", data.get("exposure", EXPOSURE["default"]))  # ok
-    root.SetString("Category", data["category"])  # ok
-    root.SetString("SubCategory", data["subcategory"])  # ok
-    root.SetGuid("InstanceGuid", instance_guid)  # ok
-    root.SetByteArray("Icon", icon)  # ??
-
-    # ------------------------------
-    # this is the "Container"
-    ghpython_data = data["ghpython"]  # this a tuple containg code and other properties
+    ghpython_data = data["ghpython"]
 
     ghpython_root = GH_LooseChunk("UserObject")
+    ghpython_root.SetString("Description", data.get("description", ""))
+    ghpython_root.SetBoolean("UsingLibraryInputParam", False)
+    ghpython_root.SetBoolean("UsingScriptInputParam", False)
+    ghpython_root.SetBoolean("UsingStandardOutputParam", False)
+    ghpython_root.SetInt32("IconDisplay", ghpython_data.get("iconDisplay", 0))
+    ghpython_root.SetString("Name", data["name"])
+    ghpython_root.SetString("NickName", data["nickname"])
+    ghpython_root.SetBoolean("MarshalGuids", ghpython_data.get("marshalGuids", True))
+    # TODO: add ToolTip/gh_string
 
-    ghpython_root.SetString("Description", data.get("description", ""))  # ok : this is still in container's items
-    
-    # ghpython_root.SetString("ToolTip", "this is an example of tooltip")  # <<<<<<<<<<<< added FIXME: might not working
-    ghpython_root.SetBoolean("UsingLibraryInputParam", False)  # <<<<<<<<<<<< added (default might stay)
-    ghpython_root.SetBoolean("UsingScriptInputParam", False)  # <<<<<<<<<<<< added (default might stay)
-    ghpython_root.SetBoolean("UsingStandardOutputParam", False)  # <<<<<<<<<<<< added (default might stay)
 
-    # ghpython_root.SetBoolean("HideOutput", ghpython_data.get("hideOutput", True))  # !! this is still in container's items
-    # ghpython_root.SetBoolean("HideInput", ghpython_data.get("hideInput", True))  # !! this is still in container's items
-    # ghpython_root.SetBoolean(
-    #     "IsAdvancedMode", ghpython_data.get("isAdvancedMode", False)  # !! this is still in container's items
-    # )
-    # ghpython_root.SetInt32("IconDisplay", ghpython_data.get("iconDisplay", 0))  # !! this is still in container's items
-    
-    ghpython_root.SetString("Name", data["name"])  # ok
-    ghpython_root.SetString("NickName", data["nickname"])  # ok
-
-    # ghpython_root.SetBoolean(
-    #     "MarshalOutGuids", ghpython_data.get("marshalOutGuids", True)  # **!! it changed to "MarshalGuids" in cpy
-    # )
-    ghpython_root.SetBoolean("MarshalGuids", True)  # <<<<<<<<<<<< added (TODO: default value to replace)
-
-    
-
-    # ------------------------------
-    # ------------------------------
-    # attributes
-    # paramter data  TODO: why this was originally commented out?
     # ghpython_root.CreateChunk('Attributes')
     # for mf in ('Bounds', 'Pivot', 'Selected'):
 
-    # ------------------------------
-    # ------------------------------
-    # FIXME: here the component gives back this error:
-    # 1. Error running script: Unable to cast object of type 'Grasshopper.Kernel.Parameters.Param_String' to type 'RhinoCodePluginGH.Parameters.ScriptVariableParam'.
-    # needs to change the type of the parameters for both input and output
-    # parameters
-    params = ghpython_root.CreateChunk("ParameterData")  # ok
-    inputParam = ghpython_data.get("inputParameters", [])  # ok
-    outputParam = ghpython_data.get("outputParameters", []) # ok
+    params = ghpython_root.CreateChunk("ParameterData")
+    inputParam = ghpython_data.get("inputParameters", [])
+    outputParam = ghpython_data.get("outputParameters", [])
 
-    params.SetInt32("InputCount", len(inputParam))  # ok
+    params.SetInt32("InputCount", len(inputParam))
     for i, _pi in enumerate(inputParam):
         params.SetGuid(
-            "InputId", i, System.Guid.Parse("08908df5-fa14-4982-9ab2-1aa0927566aa")  # ?? <<<<<<<<<<<< changed ??
+            "InputId", i, System.Guid.Parse("08908df5-fa14-4982-9ab2-1aa0927566aa")
         )
-    params.SetInt32("OutputCount", len(outputParam))  # ok
+    params.SetInt32("OutputCount", len(outputParam))
     for i, _po in enumerate(outputParam):
         params.SetGuid(
-            "OutputId", i, System.Guid.Parse("08908df5-fa14-4982-9ab2-1aa0927566aa")  # ?? <<<<<<<<<<<< changed ??
+            "OutputId", i, System.Guid.Parse("08908df5-fa14-4982-9ab2-1aa0927566aa")
         )
-    # FIXME: the "out" guis is 3ede854e-c753-40eb-84cb-b48008f14fd4 to replace up if you want to add it :
-    # here we could add a "out" parameter as an option to be set in the metadata.json <<<<
 
-    # ------------------------------
-    # input parameters
     for i, pi in enumerate(inputParam):
         input_instance_guid = System.Guid.NewGuid()
         pi_chunk = params.CreateChunk("InputParam", i)
-        pi_chunk.SetString("Name", pi["name"])  # ok
-        pi_chunk.SetString("NickName", pi.get("nickname") or pi["name"])  # ok
-        pi_chunk.SetString("Description", pi.get("description"))  # ok
-        pi_chunk.SetBoolean("Optional", pi.get("optional", True))  # ok
-        pi_chunk.SetBoolean("AllowTreeAccess", pi.get("allowTreeAccess", True))  # ok
-        pi_chunk.SetBoolean("ShowTypeHints", pi.get("showTypeHints", True))  # ok
+        pi_chunk.SetString("Name", pi["name"])
+        pi_chunk.SetString("NickName", pi.get("nickname") or pi["name"])
+        pi_chunk.SetString("Description", pi.get("description"))
+        pi_chunk.SetBoolean("Optional", pi.get("optional", True))
+        pi_chunk.SetBoolean("AllowTreeAccess", pi.get("allowTreeAccess", True))
+        pi_chunk.SetBoolean("ShowTypeHints", pi.get("showTypeHints", True))
         pi_chunk.SetInt32(
             "ScriptParamAccess",
-            parse_param_access(pi.get("scriptParamAccess", ACCESS["default"])),  # ok
+            parse_param_access(pi.get("scriptParamAccess", ACCESS["default"])),
         )
-        pi_chunk.SetInt32("SourceCount", 0)  # ok
-        pi_chunk.SetGuid("InstanceGuid", input_instance_guid)  # ok
-        pi_chunk.SetGuid("TypeHintID", parse_param_type_hint(pi.get("typeHintID")))  # ok FIXME: this one is maybe to modify
+        pi_chunk.SetInt32("SourceCount", pi.get("sourceCount", 0))
+        pi_chunk.SetGuid("InstanceGuid", input_instance_guid)
+        pi_chunk.SetGuid("TypeHintID", parse_param_type_hint(pi.get("typeHintID")))
         pi_chunk.SetInt32(
             "WireDisplay",
-            parse_wire_display(pi.get("wireDisplay", WIRE_DISPLAY["default"])),  # !! TODO: not sure if not shown by default, for test get out
+            parse_wire_display(pi.get("wireDisplay", WIRE_DISPLAY["default"])),
         )
-        pi_chunk.SetBoolean("ReverseData", pi.get("reverse", False))  # !! TODO: not sure if not shown by default, for test get out
-        pi_chunk.SetBoolean("SimplifyData", pi.get("simplify", False))  # !! TODO: not sure if not shown by default, for test get out
-        # Mutually exclusive options
+        pi_chunk.SetBoolean("ReverseData", pi.get("reverse", False))
+        pi_chunk.SetBoolean("SimplifyData", pi.get("simplify", False))
         if pi.get("flatten", False):
-            pi_chunk.SetInt32("Mapping", 1)  # !! TODO: not sure if not shown by default, for test get out
+            pi_chunk.SetInt32("Mapping", 1)
         elif pi.get("graft", False):
-            pi_chunk.SetInt32("Mapping", 2)  # !! TODO: not sure if not shown by default, for test get out
+            pi_chunk.SetInt32("Mapping", 2)
 
-    # ------------------------------
-    # output parameters
     for i, po in enumerate(outputParam):
         output_instance_guid = System.Guid.NewGuid()
-        po_chunk = params.CreateChunk("OutputParam", i)  # ok
-        po_chunk.SetString("Name", po["name"])  # ok
-        po_chunk.SetString("NickName", po.get("nickname") or po["name"])  # ok
-        po_chunk.SetString("Description", po.get("description"))  # ok
-        po_chunk.SetBoolean("Optional", po.get("optional", False))  # ok
-        po_chunk.SetInt32("SourceCount", 0)  # ok
-
-        # po_chunk.SetGuid("TypeHintID", System.Guid.Parse("0b057941-4ed8-4cde-9c90-bacf7ba51cb7"))
-
-        po_chunk.SetGuid("InstanceGuid", output_instance_guid)  # ok
-        # FIXME: here the param hint needs to be added/modified
-        
-
-        po_chunk.SetBoolean("ReverseData", po.get("reverse", False))  # !! TODO: see above
-        po_chunk.SetBoolean("SimplifyData", po.get("simplify", False))  # !! TODO: see above
-        # Mutually exclusive options
+        po_chunk = params.CreateChunk("OutputParam", i)
+        po_chunk.SetString("Name", po["name"])
+        po_chunk.SetString("NickName", po.get("nickname") or po["name"])
+        po_chunk.SetString("Description", po.get("description"))
+        po_chunk.SetBoolean("Optional", po.get("optional", False))
+        po_chunk.SetInt32("SourceCount", po.get("sourceCount", 0))
+        po_chunk.SetGuid("InstanceGuid", output_instance_guid)
+        po_chunk.SetBoolean("ReverseData", po.get("reverse", False))
+        po_chunk.SetBoolean("SimplifyData", po.get("simplify", False))
         if po.get("flatten", False):
-            po_chunk.SetInt32("Mapping", 1)  # !! TODO: see above
+            po_chunk.SetInt32("Mapping", 1)
         elif po.get("graft", False):
-            po_chunk.SetInt32("Mapping", 2)  # !! TODO: see above
+            po_chunk.SetInt32("Mapping", 2)
 
-    # ------------------------------
-    # code
-
-    # FIXME: does not exist anymore, need a new chunk
     script = ghpython_root.CreateChunk("Script")
-    # TODO: here the  code from the component needs to go in base64
-    code = base64.b64encode(code.encode("utf-8"))
-    script.SetString("Text", "IiIiVGhpcyBpcyBhIG5ldyBzY3JpcHQgaW5zdGFuY2UiIiINCmltcG9ydCBTeXN0ZW0NCmltcG9ydCBSaGlubw0KaW1wb3J0IEdyYXNzaG9wcGVyDQoNCmltcG9ydCByaGlub3NjcmlwdHN5bnRheCBhcyBycw0KDQoNCmNsYXNzIE15Q29tcG9uZW50KEdyYXNzaG9wcGVyLktlcm5lbC5HSF9TY3JpcHRJbnN0YW5jZSk6DQogICAgZGVmIFJ1blNjcmlwdChzZWxmLCBjb21wYXNuZXdfeCwgeSk6DQogICAgICAgICIiIkdyYXNzaG9wcGVyIFNjcmlwdCBjb21wYXMgYWN0aW9uIiIiDQogICAgICAgIGEgPSAiSGVsbG8gUHl0aG9uIDMgaW4gR3Jhc3Nob3BwZXIhIg0KICAgICAgICBwcmludChhKQ0KICAgICAgICANCiAgICAgICAgcmV0dXJuDQo=")
-    script.SetString("Title", "S")
+
+
+    # import marshal
+    # code_binary = marshal.dumps(compile(code, "<string>", "exec"))
+
+    # code_binary = System.Text.Encoding.UTF8.GetBytes(code)  # ipy
+    
+    code_base64 = base64.b64encode(code.encode("utf-8"))  # cpy
+    print(code_base64)
+
+    # get rid of the b' and ' at the beginning and end of the string
+    code_base64 = str(code_base64)[2:-1]
+
+    script.SetString("Text", f"{code_base64}")
+    # script.SetString("Text", "IiIiCkRvIHNvbWV0aGluZyBzaWxseS4KClRoaXMgY29tcG9uZW50IGRvZXMgbm90aGluZyB1c2VmdWwsIGl0J3Mgb25seSBhIG1pbmltYWwgZXhhbXBsZS4KCiAgICBBcmdzOgogICAgICAgIHg6IFggdmFsdWUKICAgICAgICB5OiBZIHZhbHVlCiAgICAgICAgejogWiB2YWx1ZQogICAgUmV0dXJuczoKICAgICAgICBhOiBUaGUgc3VtIG9mIGFsbCB0aHJlZSB2YWx1ZXMuCiIiIgoKZnJvbSBnaHB5dGhvbmxpYi5jb21wb25lbnRiYXNlIGltcG9ydCBleGVjdXRpbmdjb21wb25lbnQgYXMgY29tcG9uZW50CgpjbGFzcyBNaW5pbWFsU2RrQ29tcG9uZW50KGNvbXBvbmVudCk6CiAgICBkZWYgUnVuU2NyaXB0KHNlbGYsIHgsIHksIHopOgogICAgICAgIHNlbGYuTWVzc2FnZSA9ICdDT01QT05FTlQgdnt7dmVyc2lvbn19JwogICAgICAgIHJldHVybiAoeCArIHkgKyB6KQo=")
+    # FIXME: solve the encoding because it set to script
+    # script.SetString("Text", "IiIiVGhpcyBpcyBhIG5ldyBzY3JpcHQgaW5zdGFuY2UiIiINCmltcG9ydCBTeXN0ZW0NCmltcG9ydCBSaGlubw0KaW1wb3J0IEdyYXNzaG9wcGVyDQoNCmltcG9ydCByaGlub3NjcmlwdHN5bnRheCBhcyBycw0KDQoNCmNsYXNzIE15Q29tcG9uZW50KEdyYXNzaG9wcGVyLktlcm5lbC5HSF9TY3JpcHRJbnN0YW5jZSk6DQogICAgZGVmIFJ1blNjcmlwdChzZWxmLCBjb21wYXNuZXdfeCwgeSk6DQogICAgICAgICIiIkdyYXNzaG9wcGVyIFNjcmlwdCBjb21wYXMgYWN0aW9uIiIiDQogICAgICAgIGEgPSAiSGVsbG8gUHl0aG9uIDMgaW4gR3Jhc3Nob3BwZXIhIg0KICAgICAgICBwcmludChhKQ0KICAgICAgICANCiAgICAgICAgcmV0dXJuDQo=")
+    
+    # convert this base64 to string:
+    # code2convert = "IiIiVGhpcyBpcyBhIG5ldyBzY3JpcHQgaW5zdGFuY2UiIiINCmltcG9ydCBTeXN0ZW0NCmltcG9ydCBSaGlubw0KaW1wb3J0IEdyYXNzaG9wcGVyDQoNCmltcG9ydCByaGlub3NjcmlwdHN5bnRheCBhcyBycw0KDQoNCmNsYXNzIE15Q29tcG9uZW50KEdyYXNzaG9wcGVyLktlcm5lbC5HSF9TY3JpcHRJbnN0YW5jZSk6DQogICAgZGVmIFJ1blNjcmlwdChzZWxmLCBjb21wYXNuZXdfeCwgeSk6DQogICAgICAgICIiIkdyYXNzaG9wcGVyIFNjcmlwdCBjb21wYXMgYWN0aW9uIiIiDQogICAgICAgIGEgPSAiSGVsbG8gUHl0aG9uIDMgaW4gR3Jhc3Nob3BwZXIhIg0KICAgICAgICBwcmludChhKQ0KICAgICAgICANCiAgICAgICAgcmV0dXJuDQo="
+    # code2convert = base64.b64decode(code2convert).decode("utf-8")
+    # # print(code2convert)
+
+    script.SetString("Title", "S")  # FIXME:to parametrize
 
     language_spec = script.CreateChunk("LanguageSpec")
     language_spec.SetString("Taxon", "mcneel.pythonnet.python")
-    language_spec.SetString("Version", "3.9.10")  # TODO: the version might be a parameter
+    language_spec.SetString("Version", CPY_VER)
 
-    # print("CodeInput", code)
-
-    # ------------------------------
-    # ------------------------------
-    # Serialization
-    # TODO: test, get rid at merge
-    # print(ghpython_root.Serialize_Xml())
-    xml_serialized = ghpython_root.Serialize_Xml()
-    # save to file
-    with open(r"F:\compas-actions.ghpython_components\build\test.xml", "w") as f:
-        f.write(xml_serialized)
-    # ------------------------------
-    
+    # xml_serialized = ghpython_root.Serialize_Xml()
     root.SetByteArray("Object", ghpython_root.Serialize_Binary())
-
     System.IO.File.WriteAllBytes(target, root.Serialize_Binary())
-    # ------------------------------
-
 
 
 if __name__ == "__main__":
