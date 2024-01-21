@@ -17,3 +17,5 @@ class KitchenSinkComponent(component):
     def RunScript(self, x, y, z):
         self.Message = 'COMPONENT v{{version}}'
         return x + y + z
+
+        
