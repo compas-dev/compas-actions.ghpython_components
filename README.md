@@ -2,7 +2,7 @@
 
 > A github action to make Grasshopper development 165% <sup><small>[1]</small></sup> version-control friendlier and 83% more pleasant.
 
-Imagine if you could write your grasshopper components in Python code in an actual text file with a powerful editor?
+Imagine if you could write your grasshopper components in Python code (both IronPython for RhinoV7 and less, or CPython for RhinoV8) in an actual text file with a powerful editor?
 Git wouldn't hate you and life would be so much beautiful. 🐵
 
 Well, here's an action for you then! 🦸‍♀️
@@ -14,56 +14,92 @@ Well, here's an action for you then! 🦸‍♀️
 ### Usage from Github Actions
 
 The recommended way to use this tool is as a Github Action.
-It needs to be run on a windows runner and IronPython/NuGet need to be pre-installed.
+It needs to be run on a windows runner and IronPython/NuGet or Python3/pythonnet/Nuget depending of which component you want to build, needs to be pre-installed.
 
 Copy the following workflow code into a `.github/workflows/main.yml` file in your repository.
 Make sure you have the components definition (see below for details) stored in a source folder.
 Replace the `source` and `target` to match your folder structure.
+To specify the interpreter to use, you can define the action parameter `interpreter` to either `ironpython` or `python3` (by default it is `ironpython`).
+
+For IronPython (RhinoV7 and less):
 
 ```yaml
 on: [push]
 
 jobs:
-  build_ghuser_components:
+  build_ipy_ghuser_components:
     runs-on: windows-latest
-    name: Build components
     steps:
       - uses: actions/checkout@v2
       - uses: NuGet/setup-nuget@v1.0.5
+
       - name: Install IronPython
         run: |
           choco install ironpython --version=2.7.8.1
-      - uses: compas-dev/compas-actions.ghpython_components@v2
+
+      - name: Run
+        uses: ./
         with:
-          source: components
+          source: examples/ipy
           target: build
 
-      # The components have been built at this step.
-      # Now you can choose what to do with them, e.g.:
-      # upload them as artifacts:
       - uses: actions/upload-artifact@v2
         with:
-          name: ghuser-components
+          name: ipy_ghuser-components
           path: build
 ```
+
+For Python3 (RhinoV8):
+
+```yaml
+on: [push]
+
+jobs:
+  build_cpy_ghuser_components:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: NuGet/setup-nuget@v1.0.5
+
+      - name: Install CPython and pythonnet package
+        run: |
+          choco install python --version=3.9.10
+          python -m pip install pythonnet==3.0.3
+
+      - name: Run
+        uses: ./
+        with:
+          source: examples/cpy
+          target: build
+          interpreter: cpython
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: cpy_ghuser-components
+          path: build
+```
+
 
 Commit, push and enjoy! 🍿
 
 ### Usage on the command line
 
 Alternatively, you can also use this tool directly from the command line.
-Make sure to have IronPython installed and the `GH_IO.dll` assembly available.
+Make sure to have IronPython or Python3/pythonnet installed and the `GH_IO.dll` assembly available.
 Then start the script pointing it to a source and target folder, e.g.:
 
-    ipy componentize.py examples build
+    ipy componentize_ipy.py examples build
+    python componentize_cpy.py examples build
 
 Optionally, tag it with a version:
 
-    ipy componentize.py examples build --version 0.1.2
+    ipy componentize_ipy.py examples build --version 0.1.2
+    python componentize_cpy.py examples build --version 0.1.2
 
 An optional name prefix can help tell components apart from other similarly named ones:
 
-    ipy componentize.py examples build --prefix "(PACKAGE-NAME)"
+    ipy componentize_ipy.py examples build --prefix "(PACKAGE-NAME)"
+    python componentize_cpy.py examples build --prefix "(PACKAGE-NAME)"
 
 ## How to create components
 
@@ -95,8 +131,7 @@ An alternative is to include them in your packaging steps, e.g. calling `python 
 
 ## Python code
 
-* Supports both procedural and GH_Component SDK modes (see `isAdvancedMode` in metadata)
-* Supports a small set of templated variables that can be used in code:
+Supports a small set of templated variables that can be used in code:
   * `{{version}}`: Gets replaced with the version, if specified in the command-line.
   * `{{name}}`: Gets replaced with the name of the component as defined in the metadata file.
   * `{{ghuser_name}}`: Gets replaced with the name of the `.ghuser` file being generated.
@@ -119,10 +154,11 @@ An alternative is to include them in your packaging steps, e.g. calling `python 
   * `128`: Expose the object in the seventh section on the toolbar.
 * `instanceGuid`: **(optional)** Statically define a GUID for this instance. Defaults to a new Guid.
 * `ghpython`
-  * `hideOutput`: **(optional)** Defines whether to hide or not `out` output parameter. Defaults to `True`.
-  * `hideInput`: **(optional)** Defines whether to hide or not the `code` input parameter. Defaults to `True`.
-  * `isAdvancedMode`: **(optional)** Defines whether the script is in advanced mode (aka GH_Component SDK mode) or procedural mode. Defaults to `False`.
-  * `marshalOutGuids`: **(optional)** Defines whether output Guids will be looked up or not. Defaults to `True`. Change to `False` to preserve output Guids.
+  * `hideOutput`: **(optional ⚠️ only IronPython)** Defines whether to hide or not `out` output parameter. Defaults to `True`.
+  * `hideInput`: **(optional ⚠️ only IronPython)** Defines whether to hide or not the `code` input parameter. Defaults to `True`.
+  * `isAdvancedMode`: **(optional ⚠️ only IronPython)** Defines whether the script is in advanced mode (aka GH_Component SDK mode) or procedural mode. Defaults to `False`.
+  * `marshalOutGuids`: **(optional ⚠️ only IronPython)** Defines whether output Guids will be looked up or not. Defaults to `True`. Change to `False` to preserve output Guids.
+  * `marshalGuids`: **(optional ⚠️ only CPython)** Defines whether input Guids will be looked up or not. Defaults to `True`. Change to `False` to preserve input Guids.
   * `iconDisplay`: **(optional)** Defines whether to display the icon or not. Defaults to `0`.
     * `0` : Application setting
     * `1` : Text display

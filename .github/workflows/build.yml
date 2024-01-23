@@ -4,7 +4,6 @@ on: [push]
 
 jobs:
   build_cpy_ghuser_components:
-    name: windows-cpython
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
@@ -28,7 +27,6 @@ jobs:
           path: build
 
   build_ipy_ghuser_components:
-    name: windows-ironpython
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
