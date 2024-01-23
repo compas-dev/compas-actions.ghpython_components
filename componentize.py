@@ -14,7 +14,7 @@ import System
 import System.IO
 
 
-GHPYTHON_SCRIPT_GUID = System.Guid("c9b2d725-6f87-4b07-af90-bd9aefef68eb")
+SCRIPT_COMPONENT_GUID = System.Guid("c9b2d725-6f87-4b07-af90-bd9aefef68eb")
 CPY_VER = "3.-1"
 TEMPLATE_VER = re.compile("{{version}}")
 TEMPLATE_NAME = re.compile("{{name}}")
@@ -232,7 +232,7 @@ def create_ghuser_component(source, target, version=None, prefix=None):
     prefix = prefix or ""
 
     root = GH_LooseChunk("UserObject")
-    root.SetGuid("BaseID", GHPYTHON_SCRIPT_GUID)
+    root.SetGuid("BaseID", SCRIPT_COMPONENT_GUID)
     root.SetString("Name", prefix + data["name"])
     root.SetString("NickName", data["nickname"])
     root.SetString("Description", data.get("description", ""))
@@ -393,9 +393,7 @@ if __name__ == "__main__":
         print("[-]  Cannot find GH_IO Assembly! Aborting.")
         sys.exit(-1)
 
-    gh_io = os.path.abspath(gh_io)
-    gh_io = gh_io[:-4]
-    clr.AddReference(gh_io)
+    clr.AddReference(os.path.splitext(gh_io)[0])
     
     print("[x] GH_IO assembly: {}".format(gh_io))
 

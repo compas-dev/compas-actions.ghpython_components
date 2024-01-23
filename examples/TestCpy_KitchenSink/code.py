@@ -11,6 +11,7 @@ This component does nothing useful, it's only a kitchen sink (but in cpy) exampl
         result: The sum of all three values.
 """
 from ghpythonlib.componentbase import executingcomponent as component
+
 import System
 import platform
 import Rhino
