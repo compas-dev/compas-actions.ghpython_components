@@ -13,7 +13,7 @@ jobs:
       - name: Run
         uses: ./
         with:
-          source: examples
+          source: examples/ipy
           target: build
 
       - uses: actions/upload-artifact@v2

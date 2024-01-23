@@ -1,7 +1,7 @@
 """
-Do something silly in cpy.
+Do something silly in python3.
 
-This component does nothing useful, it's only a kitchen sink (but in cpy) example showing most available options.
+This component does nothing useful, it's only a kitchen sink (but in python3) example showing most available options.
 
     Args:
         x: X value
