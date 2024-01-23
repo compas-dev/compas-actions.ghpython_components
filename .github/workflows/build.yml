@@ -3,8 +3,8 @@ name: build
 on: [push]
 
 jobs:
-  build_ghuser_components:  # TODO: change this for windows-ironpython (it can be another workflow)
-    name: windows-cpython  # TODO: change this for windows-ironpython
+  build_ipy_ghuser_components:
+    name: windows-cpython
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
@@ -18,5 +18,23 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: ghuser-components
+          name: ipy_ghuser-components
+          path: build
+
+  build_cpy_ghuser_components:
+    name: windows-cpython
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: NuGet/setup-nuget@v1.0.5
+
+      - name: Run
+        uses: ./
+        with:
+          source: examples/cpy
+          target: build
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: cpy_ghuser-components
           path: build
