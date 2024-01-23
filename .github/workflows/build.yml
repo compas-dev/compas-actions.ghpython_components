@@ -14,12 +14,12 @@ jobs:
         uses: ./
         with:
           source: examples/ipy
-          target: build
+          target: build/ipy
 
       - uses: actions/upload-artifact@v2
         with:
           name: ipy_ghuser-components
-          path: build
+          path: build/ipy
 
   build_cpy_ghuser_components:
     name: windows-cpython
@@ -32,10 +32,10 @@ jobs:
         uses: ./
         with:
           source: examples/cpy
-          target: build
+          target: build/cpy
           interpreter: cpython
 
       - uses: actions/upload-artifact@v2
         with:
           name: cpy_ghuser-components
-          path: build
+          path: build/cpy
