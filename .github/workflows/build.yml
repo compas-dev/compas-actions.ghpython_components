@@ -10,18 +10,6 @@ jobs:
       - uses: actions/checkout@v2
       - uses: NuGet/setup-nuget@v1.0.5
 
-      # - name: Install IronPython
-      #   run: |
-      #     choco install ironpython --version=2.7.8.1
-
-      # - name: Install Python3
-      #   uses: actions/setup-python@v2
-      #   with:
-      #     python-version: '3.9.10'
-      # - name: Install pythonnet
-      #   run: |
-      #     pip install pythonnet
-
       - name: Run
         uses: ./
         with:
@@ -30,5 +18,5 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: ghuser-components  # TODO: add other folder
+          name: ghuser-components
           path: build

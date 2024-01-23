@@ -10,25 +10,37 @@ inputs:
   prefix:
     description: 'Add this prefix to the name of each generated component'
     required: false
-  # TODO: add a input and a if switch statement
-  # interpreter:
-  #   description: 'Python interpreter to use'
-  #   required: false
-  #   default: 'ironpython'
+  interpreter:
+    description: 'Python interpreter to use: ironpython, or cpython'
+    required: false
+    default: 'ironpython'
+
 runs:
   using: 'composite'
   steps:
-    - name: Install Python3
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.9.10'
-    - name: Install pythonnet
-      run: pip install pythonnet
+    - name: Install pythonnet or IronPython
+      run: |
+        if ("${{ inputs.interpreter }}" -eq "cpython") {
+          echo "Installing Python3"
+          # Install Python3
+          # pip install pythonnet
+        } else {
+          echo "Installing IronPython"
+          # choco install ironpython --version=2.7.8.1
+        }
       shell: pwsh
-    - run: nuget install Grasshopper -OutputDirectory ./lib -source https://api.nuget.org/v3/index.json
-      shell: pwsh  # TODO: this one should be for both
-    - run: |
-        $command="python"
+
+    - name: Install Grasshopper
+      run: nuget install Grasshopper -OutputDirectory ./lib -source https://api.nuget.org/v3/index.json
+      shell: pwsh
+
+    - name: Launch componentizer
+      run: |
+        if ("${{ inputs.interpreter }}" -eq "cpython") {
+          $command="python"
+        } else {
+          $command="ipy"
+        }
         $params="${{ github.action_path }}/componentize.py", "${{ inputs.source }}", "${{ inputs.target }}", "--ghio", "./lib"
         $prefix="${{ inputs.prefix }}"
         if( $prefix )
