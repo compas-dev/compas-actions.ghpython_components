@@ -13,18 +13,29 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - run: nuget install Grasshopper -OutputDirectory ./lib -source https://api.nuget.org/v3/index.json
-      shell: pwsh
-    - run: |
-        $command="python"
-        $params="${{ github.action_path }}/componentize.py", "${{ inputs.source }}", "${{ inputs.target }}", "--ghio", "./lib"
-        $prefix="${{ inputs.prefix }}"
-        if( $prefix )
-        {
-          $params=$params + "--prefix", "$prefix"
-        }
-        & $command $params
-      shell: pwsh
+    - name: Install Python3
+          uses: actions/setup-python@v2
+          with:
+            python-version: '3.9.10'
+    - name: Install pythonnet
+      run: |
+        pip install pythonnet
+
+    - name: Install Grasshopper
+        run: nuget install Grasshopper -OutputDirectory ./lib -source https://api.nuget.org/v3/index.json
+        shell: pwsh
+
+    - name: Call componentizer
+        run: |
+          $command="python"
+          $params="${{ github.action_path }}/componentize.py", "${{ inputs.source }}", "${{ inputs.target }}", "--ghio", "./lib"
+          $prefix="${{ inputs.prefix }}"
+          if( $prefix )
+          {
+            $params=$params + "--prefix", "$prefix"
+          }
+          & $command $params
+        shell: pwsh
 branding:
   icon: 'box'
   color: 'orange'
