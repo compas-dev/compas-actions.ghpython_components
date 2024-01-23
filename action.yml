@@ -39,10 +39,12 @@ runs:
       run: |
         if ("${{ inputs.interpreter }}" -eq "cpython") {
           $command="python"
+          $componentizer="${{ github.action_path }}/componentize_cpy.py"
         } else {
           $command="ipy"
+          $componentizer="${{ github.action_path }}/componentize_ipy.py"
         }
-        $params="${{ github.action_path }}/componentize.py", "${{ inputs.source }}", "${{ inputs.target }}", "--ghio", "./lib"
+        $params=$componentizer, "${{ inputs.source }}", "${{ inputs.target }}", "--ghio", "./lib"
         $prefix="${{ inputs.prefix }}"
         if( $prefix )
         {
