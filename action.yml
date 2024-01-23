@@ -22,11 +22,12 @@ runs:
       run: |
         if ("${{ inputs.interpreter }}" -eq "cpython") {
           echo "Installing Python3"
-          # Install Python3
-          # pip install pythonnet
+          choco install python --version=3.9.10
+          echo "Installing pythonnet"
+          pip install pythonnet==3.0.3
         } else {
           echo "Installing IronPython"
-          # choco install ironpython --version=2.7.8.1
+          choco install ironpython --version=2.7.8.1
         }
       shell: pwsh
 
