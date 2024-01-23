@@ -32,6 +32,7 @@ runs:
       shell: pwsh
 
     - name: Install Grasshopper
+      uses: NuGet/setup-nuget@v1.0.5
       run: nuget install Grasshopper -OutputDirectory ./lib -source https://api.nuget.org/v3/index.json
       shell: pwsh
 
