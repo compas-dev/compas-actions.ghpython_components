@@ -21,6 +21,6 @@ import rhinoscriptsyntax as rs
 
 class MyComponent(component):
     def RunScript(self, x: float, y: float, z: float):
-        ghenv.Component.Message = f"Cpy Version: {platform.python_version()}"
+        ghenv.Component.Message = 'COMPONENT v{{version}}'
         result = x + y + z
         return result

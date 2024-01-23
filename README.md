@@ -1,6 +1,6 @@
 # GHPython Componentizer
 
-> A github action to make Grasshopper development 164% <sup><small>[1]</small></sup> version-control friendlier and 82% more pleasant.
+> A github action to make Grasshopper development 165% <sup><small>[1]</small></sup> version-control friendlier and 83% more pleasant.
 
 Imagine if you could write your grasshopper components in Python code in an actual text file with a powerful editor?
 Git wouldn't hate you and life would be so much beautiful. 🐵
@@ -45,7 +45,6 @@ jobs:
         with:
           name: ghuser-components
           path: build
-
 ```
 
 Commit, push and enjoy! 🍿

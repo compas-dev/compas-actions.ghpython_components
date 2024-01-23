@@ -9,6 +9,7 @@
     "ghpython": {
         "marshalGuids": true,
         "iconDisplay": 2,
+        "isAdvancedMode": true,
         "inputParameters": [
             {
                 "name": "X",

@@ -12,6 +12,6 @@ This component does nothing useful, it's only a minimal example of python3 in gr
 """
 import platform
 
-ghenv.Component.Message = f"Cpy Version: {platform.python_version()}"
+ghenv.Component.Message = 'COMPONENT v{{version}}'
 
 a = x + y + z
