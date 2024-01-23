@@ -33,6 +33,7 @@ jobs:
         with:
           source: examples/cpy
           target: build
+          interpreter: cpython
 
       - uses: actions/upload-artifact@v2
         with:
