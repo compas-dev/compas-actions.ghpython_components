@@ -18,21 +18,7 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Install pythonnet or IronPython
-      run: |
-        if ("${{ inputs.interpreter }}" -eq "cpython") {
-          echo "Installing Python3"
-          choco install python --version=3.9.10
-          echo "Installing pythonnet"
-          pip install pythonnet==3.0.3
-        } else {
-          echo "Installing IronPython"
-          choco install ironpython --version=2.7.8.1
-        }
-      shell: pwsh
-
     - name: Install Grasshopper
-      uses: NuGet/setup-nuget@v1.0.5
       run: nuget install Grasshopper -OutputDirectory ./lib -source https://api.nuget.org/v3/index.json
       shell: pwsh
 
