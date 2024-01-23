@@ -37,12 +37,14 @@ jobs:
         run: |
           choco install ironpython --version=2.7.8.1
 
-      - name: Run
-        uses: ./
+      - uses: compas-dev/compas-actions.ghpython_components@v2
         with:
-          source: examples/ipy
+          source: components
           target: build
 
+      # The components have been built at this step.
+      # Now you can choose what to do with them, e.g.:
+      # upload them as artifacts:
       - uses: actions/upload-artifact@v2
         with:
           name: ipy_ghuser-components
@@ -66,12 +68,11 @@ jobs:
           choco install python --version=3.9.10
           python -m pip install pythonnet==3.0.3
 
-      - name: Run
-        uses: ./
+      - uses: compas-dev/compas-actions.ghpython_components@v2
         with:
-          source: examples/cpy
+          source: components
           target: build
-          interpreter: cpython
+          interpreter: cpython  # optional, defaults to ironpython
 
       - uses: actions/upload-artifact@v2
         with:
