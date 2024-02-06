@@ -7,7 +7,7 @@ import sys
 import tempfile
 import urllib.request, urllib.parse, urllib.error
 import zipfile
-from io import StringIO
+from io import BytesIO
 
 import clr
 import System
@@ -66,9 +66,9 @@ def fetch_ghio_lib(target_folder="temp"):
     ghio_dll = "GH_IO.dll"
     filename = "lib/net48/" + ghio_dll
 
-    response = urllib.urlopen("https://www.nuget.org/api/v2/package/Grasshopper/")
+    response = urllib.request.urlopen("https://www.nuget.org/api/v2/package/Grasshopper/")
     dst_file = os.path.join(target_folder, ghio_dll)
-    zip_file = zipfile.ZipFile(StringIO.StringIO(response.read()))
+    zip_file = zipfile.ZipFile(BytesIO(response.read()))
 
     with zip_file.open(filename, "r") as zipped_dll:
         with open(dst_file, "wb") as fp:

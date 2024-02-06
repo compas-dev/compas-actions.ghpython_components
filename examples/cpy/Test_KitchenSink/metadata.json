@@ -11,7 +11,7 @@
         "iconDisplay": 2,
         "inputParameters": [
             {
-                "name": "X",
+                "name": "x",
                 "nickname": "x",
                 "description": "The X value of the component.",
                 "optional": true,
@@ -25,7 +25,7 @@
                 "simplify": false
             },
             {
-                "name": "Y",
+                "name": "x",
                 "nickname": "y",
                 "description": "The Y value of the component.",
                 "optional": true,
@@ -38,7 +38,7 @@
                 "simplify": true
             },
             {
-                "name": "Z",
+                "name": "z",
                 "nickname": "z",
                 "description": "The Z value of the component.",
                 "optional": true,

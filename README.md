@@ -89,18 +89,18 @@ Alternatively, you can also use this tool directly from the command line.
 Make sure to have IronPython or Python3/pythonnet installed and the `GH_IO.dll` assembly available.
 Then start the script pointing it to a source and target folder, e.g.:
 
-    ipy componentize_ipy.py examples build
-    python componentize_cpy.py examples build
+    ipy componentize_ipy.py examples/ipy build
+    python componentize_cpy.py examples/cpy build
 
 Optionally, tag it with a version:
 
-    ipy componentize_ipy.py examples build --version 0.1.2
-    python componentize_cpy.py examples build --version 0.1.2
+    ipy componentize_ipy.py examples/ipy build --version 0.1.2
+    python componentize_cpy.py examples/cpy build --version 0.1.2
 
 An optional name prefix can help tell components apart from other similarly named ones:
 
-    ipy componentize_ipy.py examples build --prefix "(PACKAGE-NAME)"
-    python componentize_cpy.py examples build --prefix "(PACKAGE-NAME)"
+    ipy componentize_ipy.py examples/ipy build --prefix "(PACKAGE-NAME)"
+    python componentize_cpy.py examples/cpy build --prefix "(PACKAGE-NAME)"
 
 ## How to create components
 
