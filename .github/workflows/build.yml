@@ -3,22 +3,46 @@ name: build
 on: [push]
 
 jobs:
-  build:
-    name: windows-ironpython
+  build_cpy_ghuser_components:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
       - uses: NuGet/setup-nuget@v1.0.5
+
+      - name: Install CPython and pythonnet package
+        run: |
+          choco install python --version=3.9.10
+          python -m pip install pythonnet==3.0.3
+
+      - name: Run
+        uses: ./
+        with:
+          source: examples/cpy
+          target: build
+          interpreter: cpython
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: cpy_ghuser-components
+          path: build
+
+  build_ipy_ghuser_components:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: NuGet/setup-nuget@v1.0.5
+
       - name: Install IronPython
         run: |
           choco install ironpython --version=2.7.8.1
-      - name: Install dependencies
-        run: |
-          nuget install Grasshopper -OutputDirectory ./lib -source https://api.nuget.org/v3/index.json
+
       - name: Run
-        run: |
-          ipy componentize.py examples build
+        uses: ./
+        with:
+          source: examples/ipy
+          target: build
+
       - uses: actions/upload-artifact@v2
         with:
-          name: ghuser-components
+          name: ipy_ghuser-components
           path: build
