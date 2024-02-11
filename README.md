@@ -37,7 +37,7 @@ jobs:
         run: |
           choco install ironpython --version=2.7.8.1
 
-      - uses: compas-dev/compas-actions.ghpython_components@v2
+      - uses: compas-dev/compas-actions.ghpython_components@v5
         with:
           source: components
           target: build
@@ -68,7 +68,7 @@ jobs:
           choco install python --version=3.9.10
           python -m pip install pythonnet==3.0.3
 
-      - uses: compas-dev/compas-actions.ghpython_components@v2
+      - uses: compas-dev/compas-actions.ghpython_components@v5
         with:
           source: components
           target: build
