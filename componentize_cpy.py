@@ -48,6 +48,7 @@ TYPES_MAP = dict(
     surface="f4070a37-c822-410f-9057-100d2e22a22d",
     subd="20f4ca9c-6c90-4fd6-ba8a-5bf9ca79db08",
     brep="2ceb0405-fdfe-403d-a4d6-8786da45fb9d",
+    pointcloud="d73c9fb0-365d-458f-9fb5-f4141399311f",
     geometrybase="c37956f4-d39c-49c7-af71-1e87f8031b26"
 )
 
