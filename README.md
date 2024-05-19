@@ -184,7 +184,7 @@ Supports a small set of templated variables that can be used in code:
       string values (their respective Guids are not listed here for readability):
       `none`, `ghdoc`, `float`, `bool`, `int`, `complex`, `str`, `datetime`, `guid`,
       `color`, `point`, `vector`, `plane`, `interval`, `uvinterval`, `box`, `transform`,
-      `line`, `circle`, `arc`, `polyline`, `rectangle`, `curve`, `mesh`, `surface`, `subd`, `brep`, `geometrybase`.
+      `line`, `circle`, `arc`, `polyline`, `rectangle`, `curve`, `mesh`, `surface`, `subd`, `brep`, `pointcloud", `geometrybase`.
     * `reverse`: **(optional)** Defines whether data inside the parameter is reversed. Defaults to `False`.
     * `simplify`: **(optional)** Defines whether data inside the parameter is simplified. Defaults to `False`.
     * `flatten`: **(optional)** Defines whether data inside the parameter is flattened. Mutually exclusive with `graft`. Defaults to `False`.
