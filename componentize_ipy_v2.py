@@ -15,7 +15,8 @@ import clr
 import System
 import System.IO
 
-GHPYTHON_SCRIPT_GUID = System.Guid("410755b1-224a-4c1e-a407-bf32fb45ea7e")
+# this GUID means "Modern IronPython interpreter"
+GHPYTHON_SCRIPT_GUID = System.Guid("97aa26ef-88ae-4ba6-98a6-ed6ddeca11d1")
 TEMPLATE_VER = re.compile("{{version}}")
 TEMPLATE_NAME = re.compile("{{name}}")
 TEMPLATE_GHUSER_NAME = re.compile("{{ghuser_name}}")
@@ -251,7 +252,6 @@ def create_ghuser_component(source, target, version=None, prefix=None):
     ghpython_root.SetBoolean(
         "MarshalOutGuids", ghpython_data.get("marshalOutGuids", True)
     )
-    ghpython_root.SetString("CodeInput", code)
 
     # ghpython_root.CreateChunk('Attributes')
     # for mf in ('Bounds', 'Pivot', 'Selected'):
@@ -315,7 +315,16 @@ def create_ghuser_component(source, target, version=None, prefix=None):
         elif po.get("graft", False):
             po_chunk.SetInt32("Mapping", 2)
 
-    # print(ghpython_root.Serialize_Xml())
+    # this is new in Rhino8, istead of setting the code as a string, we set it as a base64 blob
+    script = ghpython_root.CreateChunk("Script")
+    code_base64 = base64.b64encode(code.encode("utf-8"))
+    code_base64 = str(code_base64)
+    script.SetString("Text", code_base64)
+    script.SetString("Title", "IPy2")
+    language_spec = script.CreateChunk("LanguageSpec")
+    language_spec.SetString("Taxon", "*.ironpython.python")
+    language_spec.SetString("Version", "2.*")
+
     root.SetByteArray("Object", ghpython_root.Serialize_Binary())
 
     System.IO.File.WriteAllBytes(target, root.Serialize_Binary())
