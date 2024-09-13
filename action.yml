@@ -27,6 +27,9 @@ runs:
         if ("${{ inputs.interpreter }}" -eq "cpython") {
           $command="python"
           $componentizer="${{ github.action_path }}/componentize_cpy.py"
+        } elseif ("${{ inputs.interpreter }}" -eq "ipy_v2"){
+          $command="ipy"
+          $componentizer="${{ github.action_path }}/componentize_ipy_v2.py"
         } else {
           $command="ipy"
           $componentizer="${{ github.action_path }}/componentize_ipy.py"
