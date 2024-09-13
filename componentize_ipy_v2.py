@@ -22,13 +22,13 @@ TEMPLATE_NAME = re.compile("{{name}}")
 TEMPLATE_GHUSER_NAME = re.compile("{{ghuser_name}}")
 
 TYPES_MAP = dict(
-    none="35915213-5534-4277-81b8-1bdc9e7383d2",
-    ghdoc="87f87f55-5b71-41f4-8aea-21d494016f81",
-    float="39fbc626-7a01-46ab-a18e-ec1c0c41685b",
+    none="6a184b65-baa3-42d1-a548-3915b401de53",
+    ghdoc="1c282eeb-dd16-439f-94e4-7d92b542fe8b",
+    float="9d51e32e-c038-4352-9554-f4137ca91b9a",
     bool="d60527f5-b5af-4ef6-8970-5f96fe412559",
     int="48d01794-d3d8-4aef-990e-127168822244",
     complex="309690df-6229-4774-91bb-b1c9c0bfa54d",
-    str="37261734-eec7-4f50-b6a8-b8d1f3c4396b",
+    str="3aceb454-6dbd-4c5b-9b6b-e71f8c1cdf88",
     datetime="09bcf900-fe83-4efa-8d32-33d89f7a3e66",
     guid="5325b8e1-51d7-4d36-837a-d98394626c35",
     color="24b1d1a3-ab79-498c-9e44-c5b14607c4d3",
@@ -49,8 +49,8 @@ TYPES_MAP = dict(
     surface="f4070a37-c822-410f-9057-100d2e22a22d",
     subd="20f4ca9c-6c90-4fd6-ba8a-5bf9ca79db08",
     brep="2ceb0405-fdfe-403d-a4d6-8786da45fb9d",
-    geometrybase="c37956f4-d39c-49c7-af71-1e87f8031b26",
     pointcloud="d73c9fb0-365d-458f-9fb5-f4141399311f",
+    geometrybase="c37956f4-d39c-49c7-af71-1e87f8031b26",
 )
 
 EXPOSURE = dict(valid=set([-1, 2, 4, 8, 16, 32, 64, 128]), default=2)
@@ -264,12 +264,12 @@ def create_ghuser_component(source, target, version=None, prefix=None):
     params.SetInt32("InputCount", len(inputParam))
     for i, _pi in enumerate(inputParam):
         params.SetGuid(
-            "InputId", i, System.Guid.Parse("84fa917c-1ed8-4db3-8be1-7bdc4a6495a2")
+            "InputId", i, System.Guid.Parse("08908df5-fa14-4982-9ab2-1aa0927566aa")
         )
     params.SetInt32("OutputCount", len(outputParam))
     for i, _po in enumerate(outputParam):
         params.SetGuid(
-            "OutputId", i, System.Guid.Parse("8ec86459-bf01-4409-baee-174d0d2b13d0")
+            "OutputId", i, System.Guid.Parse("08908df5-fa14-4982-9ab2-1aa0927566aa")
         )
 
     for i, pi in enumerate(inputParam):
