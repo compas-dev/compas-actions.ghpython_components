@@ -46,3 +46,25 @@ jobs:
         with:
           name: ipy_ghuser-components
           path: build
+
+  build_ipy_v2_ghuser_components:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: NuGet/setup-nuget@v1.0.5
+
+      - name: Install IronPython
+        run: |
+          choco install ironpython --version=2.7.8.1
+
+      - name: Run
+        uses: ./
+        with:
+          source: examples/ipy_v2
+          target: build
+          interpreter: ipy_v2
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ipy_v2_ghuser-components
+          path: build
