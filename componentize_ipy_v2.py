@@ -50,6 +50,7 @@ TYPES_MAP = dict(
     subd="20f4ca9c-6c90-4fd6-ba8a-5bf9ca79db08",
     brep="2ceb0405-fdfe-403d-a4d6-8786da45fb9d",
     geometrybase="c37956f4-d39c-49c7-af71-1e87f8031b26",
+    pointcloud="d73c9fb0-365d-458f-9fb5-f4141399311f",
 )
 
 EXPOSURE = dict(valid=set([-1, 2, 4, 8, 16, 32, 64, 128]), default=2)
@@ -236,6 +237,7 @@ def create_ghuser_component(source, target, version=None, prefix=None):
     root.SetString("Category", data["category"])
     root.SetString("SubCategory", data["subcategory"])
     root.SetGuid("InstanceGuid", instance_guid)
+    root.SetBoolean("UsingStandardOutputParam", False)
     root.SetByteArray("Icon", icon)
 
     ghpython_data = data["ghpython"]
