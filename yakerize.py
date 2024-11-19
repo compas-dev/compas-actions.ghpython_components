@@ -7,10 +7,41 @@ Andrea Settimi, Damien Gilliard, Eleni Skevaki, Marirena Kladeftira (IBOIS, CRCL
 It is distributed under the MIT License, provided this attribution is retained.
 """
 
-import os
-import sys
 import argparse
+import os
+import requests
+import sys
 import shutil
+
+
+YAK_URL = r"https://files.mcneel.com/yak/tools/latest/yak.exe"
+FILENAME = "yak.exe"
+
+
+def _download_yak_executable(target_dir: str):
+    response = requests.get(YAK_URL)
+    if response.status_code != 200:
+        raise ValueError(
+            f"Failed to download the yak.exe from url:{YAK_URL} with error : {response.status_code}"
+        )
+
+    with open(os.path.join(target_dir, FILENAME), "wb") as f:
+        f.write(response.content)
+
+
+def _set_version_in_manifest(manifest_path: str, version: str):
+    with open(manifest_path, "r") as f:
+        lines = f.readlines()
+
+    new_lines = []
+    for line in lines:
+        if "{{ version }}" in line:
+            new_lines.append(line.replace("{{ version }}", version))
+        else:
+            new_lines.append(line)
+
+    with open(manifest_path, "w") as f:
+        f.writelines(new_lines)
 
 
 def main(
@@ -20,9 +51,9 @@ def main(
     logo_path: str,
     readme_path: str,
     license_path: str,
+    version: str,
 ) -> bool:
     current_file_path = os.path.abspath(__file__)
-    current_directory = os.path.dirname(current_file_path)
     build_dir = os.path.abspath(build_dir)
 
     #####################################################################
@@ -41,7 +72,8 @@ def main(
                 print(f"Failed to delete {file_path}: {e}")
                 return False
 
-    shutil.copy(manifest_path, build_dir)
+    manifest_target = shutil.copy(manifest_path, build_dir)
+    _set_version_in_manifest(manifest_target, version)
     shutil.copy(logo_path, build_dir)
     path_miscdir: str = os.path.join(build_dir, "misc")
     os.makedirs(path_miscdir, exist_ok=False)
@@ -58,11 +90,16 @@ def main(
     #####################################################################
     # Yak exe
     #####################################################################
-    yak_exe_path: str = os.path.join(current_directory, "yaker", "exec", "Yak.exe")
-    yak_exe_path = os.path.abspath(yak_exe_path)
-    if not os.path.isfile(yak_exe_path):
-        print(f"Yak.exe not found at {yak_exe_path}.")
+
+    try:
+        _download_yak_executable(build_dir)
+    except ValueError as e:
+        print(f"Failed to download yak.exe: {e}")
         return False
+
+    yak_exe_path: str = os.path.join(build_dir, "yak.exe")
+    yak_exe_path = os.path.abspath(yak_exe_path)
+
     path_current: str = os.getcwd()
     os.chdir(build_dir)
     os.system("cd")
@@ -124,6 +161,12 @@ if __name__ == "__main__":
         default="./README.md",
         help="The path to the readme file.",
     )
+    parser.add_argument(
+        "--version",
+        type=str,
+        required=True,
+        help="The semver version string of the package.",
+    )
 
     args = parser.parse_args()
     parse_errors = []
@@ -147,6 +190,8 @@ if __name__ == "__main__":
             is_gh_components_dir_correct = False
 
     is_build_dir_correct = True
+
+    # TODO: is this the same as above?
     if os.path.isdir(args.build_dir):
         for f in os.listdir(args.build_dir):
             file_path = os.path.join(args.build_dir, f)
@@ -216,6 +261,7 @@ if __name__ == "__main__":
         logo_path=args.logo_path,
         readme_path=args.readme_path,
         license_path=args.license_path,
+        version=args.version,
     )
     if res:
         print("[x] Yakerize task completed.")
