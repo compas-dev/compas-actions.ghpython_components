@@ -21,7 +21,7 @@ jobs:
           target: build
           interpreter: cpython
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: cpy_ghuser-components
           path: build
@@ -42,7 +42,7 @@ jobs:
           source: examples/ipy
           target: build
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: ipy_ghuser-components
           path: build
