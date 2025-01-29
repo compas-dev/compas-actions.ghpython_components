@@ -80,6 +80,37 @@ jobs:
           path: build
 ```
 
+For IronPython2 (RhinoV8):
+
+```yaml
+on: [push]
+
+jobs:
+  build_ipy_ghuser_components:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: NuGet/setup-nuget@v1.0.5
+
+      - name: Install IronPython
+        run: |
+          choco install ironpython --version=2.7.8.1
+
+      - uses: compas-dev/compas-actions.ghpython_components@v5
+        with:
+          source: components
+          target: build
+          interpreter: ipy_v2
+
+      # The components have been built at this step.
+      # Now you can choose what to do with them, e.g.:
+      # upload them as artifacts:
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ipy_ghuser-components
+          path: build
+```
+
 
 Commit, push and enjoy! 🍿
 
@@ -90,16 +121,19 @@ Make sure to have IronPython or Python3/pythonnet installed and the `GH_IO.dll` 
 Then start the script pointing it to a source and target folder, e.g.:
 
     ipy componentize_ipy.py examples/ipy build
+    ipy componentize_ipy_v2.py examples/ipy_v2 build
     python componentize_cpy.py examples/cpy build
 
 Optionally, tag it with a version:
 
     ipy componentize_ipy.py examples/ipy build --version 0.1.2
+    ipy componentize_ipy_v2.py examples/ipy_v2 build --version 0.1.2
     python componentize_cpy.py examples/cpy build --version 0.1.2
 
 An optional name prefix can help tell components apart from other similarly named ones:
 
     ipy componentize_ipy.py examples/ipy build --prefix "(PACKAGE-NAME)"
+    ipy componentize_ipy.py examples/ipy_v2 build --prefix "(PACKAGE-NAME)"
     python componentize_cpy.py examples/cpy build --prefix "(PACKAGE-NAME)"
 
 ## How to create components
