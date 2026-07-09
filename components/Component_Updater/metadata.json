@@ -1,0 +1,61 @@
+{
+    "name": "Component Updater",
+    "nickname": "Updater",
+    "category": "Utilities",
+    "subcategory": "Version",
+    "description": "Check and update component versions in the current Grasshopper file",
+    "exposure": 2,
+    "instanceGuid": "c7d8e9f0-a1b2-3456-cdef-678901234567",
+    "ghpython": {
+        "marshalGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "check",
+                "nickname": "check",
+                "description": "Check for component updates",
+                "optional": true,
+                "scriptParamAccess": "item",
+                "typeHintID": "bool"
+            },
+            {
+                "name": "update",
+                "nickname": "update",
+                "description": "Update outdated components (CAUTION: will modify canvas)",
+                "optional": true,
+                "scriptParamAccess": "item",
+                "typeHintID": "bool"
+            },
+            {
+                "name": "manifest_path",
+                "nickname": "manifest",
+                "description": "Path to manifest.json (optional, auto-detect if not provided)",
+                "optional": true,
+                "scriptParamAccess": "item",
+                "typeHintID": "str"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "report",
+                "nickname": "report",
+                "description": "Version check report"
+            },
+            {
+                "name": "outdated",
+                "nickname": "outdated",
+                "description": "List of outdated components"
+            },
+            {
+                "name": "updated",
+                "nickname": "updated",
+                "description": "List of updated components"
+            },
+            {
+                "name": "errors",
+                "nickname": "errors",
+                "description": "Error messages"
+            }
+        ]
+    }
+}

@@ -1,0 +1,113 @@
+{
+    "name": "YOLO UDP Receiver",
+    "nickname": "YOLO_UDP",
+    "category": "YOLO",
+    "subcategory": "Network",
+    "description": "Receives YOLOv8 pose detection data via UDP and outputs keypoint positions",
+    "exposure": 2,
+    "instanceGuid": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "ghpython": {
+        "isAdvancedMode": true,
+        "marshalGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "enable",
+                "nickname": "on",
+                "description": "Enable/Disable UDP receiver",
+                "optional": true,
+                "allowTreeAccess": false,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "bool",
+                "simplify": false
+            },
+            {
+                "name": "port",
+                "nickname": "port",
+                "description": "UDP port number (default: 9999)",
+                "optional": true,
+                "allowTreeAccess": false,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "int",
+                "simplify": false
+            },
+            {
+                "name": "target_joint",
+                "nickname": "joint",
+                "description": "Target joint name (e.g., 'left_wrist', 'nose', 'right_shoulder')",
+                "optional": true,
+                "allowTreeAccess": false,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "sourceCount": 0,
+                "typeHintID": "str",
+                "simplify": false
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "point",
+                "nickname": "pt",
+                "description": "Target joint position as Point3d",
+                "optional": false,
+                "sourceCount": 0
+            },
+            {
+                "name": "x",
+                "nickname": "x",
+                "description": "X coordinate",
+                "optional": false,
+                "sourceCount": 0
+            },
+            {
+                "name": "y",
+                "nickname": "y",
+                "description": "Y coordinate",
+                "optional": false,
+                "sourceCount": 0
+            },
+            {
+                "name": "z",
+                "nickname": "z",
+                "description": "Z coordinate",
+                "optional": false,
+                "sourceCount": 0
+            },
+            {
+                "name": "all_points",
+                "nickname": "all_pts",
+                "description": "All detected keypoints as Point3d list",
+                "optional": false,
+                "sourceCount": 0
+            },
+            {
+                "name": "joint_names",
+                "nickname": "names",
+                "description": "List of all detected joint names",
+                "optional": false,
+                "sourceCount": 0
+            },
+            {
+                "name": "message",
+                "nickname": "msg",
+                "description": "Status message",
+                "optional": false,
+                "sourceCount": 0
+            },
+            {
+                "name": "debug",
+                "nickname": "dbg",
+                "description": "Debug information",
+                "optional": false,
+                "sourceCount": 0
+            }
+        ]
+    }
+}

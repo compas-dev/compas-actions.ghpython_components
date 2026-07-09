@@ -1,0 +1,33 @@
+# environment.yml
+# Conda environment for GH Timber Components development
+# Compatible with: macOS ARM64 (Apple Silicon) + Rhino 8 + .NET 8.0
+
+name: gh_timber
+
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  # Python version must match Rhino 8 CPython requirement
+  - python=3.9.10
+
+  # Build tools
+  - pip
+
+  # Pip packages
+  - pip:
+    # pythonnet for .NET interop (Grasshopper component generation)
+    # Version 3.0.3 tested with Rhino 8 .NET 8.0 runtime
+    - pythonnet==3.0.3
+
+    # Install local package (gh_timber module)
+    - .
+
+# Note: networkx removed as it's not used by any component
+# If needed for future components, add: - networkx>=3.2.1
+
+# Usage:
+#   conda env create -f environment.yml
+#   conda activate gh_timber
+#   gh_comp  # or: python componentize_cpy.py components dist --version "0.1.0"

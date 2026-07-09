@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "GH Timber Components",
+  "version": "0.1.1",
+  "author": "GH Timber Team",
+  "description": "Collection of Grasshopper components for timber design, physics simulation, and computer vision integration",
+  "repository": "https://github.com/fred1357944/compas-actions.ghpython_components",
+  "license": "MIT",
+  "components": [
+    {
+      "name": "Test_GhTimber",
+      "nickname": "Timber",
+      "description": "Test component for demonstrating basic component structure and gh_timber module integration",
+      "guid": "cdd47086-f912-4b77-825b-6b79c3aaecc1",
+      "version": "0.1.0",
+      "category": "GhTimber",
+      "subcategory": "Utilities",
+      "ghuser_filename": "Test_GhTimber.ghuser",
+      "inputs": [
+        {"name": "x", "type": "float", "description": "Length dimension", "optional": true},
+        {"name": "y", "type": "float", "description": "Width dimension", "optional": true},
+        {"name": "z", "type": "float", "description": "Height dimension", "optional": true}
+      ],
+      "outputs": [
+        {"name": "result", "type": "float", "description": "Calculated volume (x * y * z)"}
+      ]
+    },
+    {
+      "name": "YOLO_UDP_Receiver",
+      "nickname": "YOLO_UDP",
+      "description": "Receives YOLOv8 pose detection data via UDP and outputs keypoint positions as Point3d",
+      "guid": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "version": "0.1.1",
+      "category": "YOLO",
+      "subcategory": "Network",
+      "ghuser_filename": "YOLO_UDP_Receiver.ghuser",
+      "inputs": [
+        {"name": "enable", "type": "bool", "description": "Enable/Disable UDP receiver", "optional": true},
+        {"name": "port", "type": "int", "description": "UDP port number (default: 9999)", "optional": true},
+        {"name": "target_joint", "type": "str", "description": "Target joint name (e.g., 'left_wrist')", "optional": true}
+      ],
+      "outputs": [
+        {"name": "point", "type": "Point3d", "description": "Target joint 3D coordinate"},
+        {"name": "x", "type": "float", "description": "X coordinate (0-100)"},
+        {"name": "y", "type": "float", "description": "Y coordinate (0-100)"},
+        {"name": "z", "type": "float", "description": "Z coordinate (usually 0)"},
+        {"name": "all_points", "type": "list", "description": "All detected keypoints as Point3d list"},
+        {"name": "joint_names", "type": "list", "description": "Names of all detected joints"},
+        {"name": "message", "type": "str", "description": "Status message"},
+        {"name": "debug", "type": "str", "description": "Debug information"}
+      ]
+    },
+    {
+      "name": "Swarm_Dynamics",
+      "nickname": "Swarm",
+      "description": "Particle swarm dynamics simulation with spring physics, rotation, breathing, and K-nearest neighbor connections",
+      "guid": "b5c6d7e8-f9a0-1234-bcde-567890abcdef",
+      "version": "0.1.0",
+      "category": "Physics",
+      "subcategory": "Simulation",
+      "ghuser_filename": "Swarm_Dynamics.ghuser",
+      "inputs": [
+        {"name": "N", "type": "int", "description": "Number of initial bars", "optional": true},
+        {"name": "Prec", "type": "int", "description": "Coordinate precision (decimal places)", "optional": true},
+        {"name": "Speed", "type": "float", "description": "Rotation speed (rad/s)", "optional": true},
+        {"name": "Amp", "type": "float", "description": "Breathing amplitude", "optional": true},
+        {"name": "Knn", "type": "int", "description": "K-nearest neighbors count", "optional": true},
+        {"name": "Radius", "type": "float", "description": "Connection radius (0 = unlimited)", "optional": true},
+        {"name": "Stiff", "type": "float", "description": "Spring stiffness", "optional": true},
+        {"name": "Damp", "type": "float", "description": "Damping coefficient", "optional": true},
+        {"name": "Dt", "type": "float", "description": "Time step", "optional": true},
+        {"name": "Act", "type": "float", "description": "Active spring amplitude", "optional": true},
+        {"name": "Seed", "type": "int", "description": "Random seed", "optional": true},
+        {"name": "Box", "type": "box", "description": "Bounding box for particle generation", "optional": true},
+        {"name": "Start", "type": "bool", "description": "Start simulation", "optional": true},
+        {"name": "Reset", "type": "bool", "description": "Reset simulation", "optional": true}
+      ],
+      "outputs": [
+        {"name": "L", "type": "list", "description": "Bar lines"},
+        {"name": "Links", "type": "list", "description": "Spring connection lines"},
+        {"name": "Nodes", "type": "list", "description": "Particle positions"},
+        {"name": "MidPts", "type": "list", "description": "Bar midpoints"},
+        {"name": "Labels", "type": "list", "description": "Bar length labels"},
+        {"name": "Lengths", "type": "list", "description": "Bar lengths"},
+        {"name": "t", "type": "float", "description": "Simulation time"},
+        {"name": "Frame", "type": "int", "description": "Frame count"},
+        {"name": "out", "type": "str", "description": "Debug output"}
+      ]
+    },
+    {
+      "name": "Component_Updater",
+      "nickname": "Updater",
+      "description": "Version management tool for checking and updating Grasshopper components (inspired by Ladybug Tools)",
+      "guid": "c7d8e9f0-a1b2-3456-cdef-678901234567",
+      "version": "0.1.0",
+      "category": "Utilities",
+      "subcategory": "Version",
+      "ghuser_filename": "Component_Updater.ghuser",
+      "inputs": [
+        {"name": "check", "type": "bool", "description": "Trigger version check", "optional": true},
+        {"name": "update", "type": "bool", "description": "Execute update (not yet implemented)", "optional": true},
+        {"name": "manifest_path", "type": "str", "description": "Path to manifest.json (auto-detect if not specified)", "optional": true}
+      ],
+      "outputs": [
+        {"name": "report", "type": "str", "description": "Detailed version check report"},
+        {"name": "outdated", "type": "list", "description": "List of components needing update"},
+        {"name": "updated", "type": "list", "description": "List of updated components (not yet implemented)"},
+        {"name": "errors", "type": "list", "description": "Error messages"}
+      ]
+    }
+  ]
+}

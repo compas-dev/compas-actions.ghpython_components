@@ -1,70 +1,178 @@
-name: build
+# .github/workflows/build.yml
+# Build and validate Grasshopper components
 
-on: [push]
+name: Build Components
+
+on:
+  push:
+    branches: [main, fix/*, feature/*]
+    paths:
+      - 'components/**'
+      - 'componentize_*.py'
+      - 'manifest.json'
+      - '.github/workflows/build.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'components/**'
+      - 'componentize_*.py'
+      - 'manifest.json'
 
 jobs:
-  build_cpy_ghuser_components:
-    runs-on: windows-latest
+  # Validate configuration files
+  validate:
+    name: Validate Configuration
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: NuGet/setup-nuget@v1.0.5
+      - uses: actions/checkout@v4
 
-      - name: Install CPython and pythonnet package
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate manifest.json
         run: |
-          choco install python --version=3.9.10
+          python -c "
+          import json
+          import sys
+
+          with open('manifest.json', 'r') as f:
+              manifest = json.load(f)
+
+          errors = []
+
+          # Check required fields
+          for field in ['name', 'version', 'components']:
+              if field not in manifest:
+                  errors.append(f'Missing required field: {field}')
+
+          # Validate each component
+          for comp in manifest.get('components', []):
+              name = comp.get('name', 'Unknown')
+              for field in ['guid', 'version', 'description']:
+                  if field not in comp:
+                      errors.append(f'{name}: Missing {field}')
+
+          if errors:
+              print('Validation errors:')
+              for e in errors:
+                  print(f'  - {e}')
+              sys.exit(1)
+          else:
+              print('✓ manifest.json is valid!')
+              print(f'  Found {len(manifest[\"components\"])} components')
+          "
+
+      - name: Validate component structure
+        run: |
+          python -c "
+          import os
+          import json
+          import sys
+
+          errors = []
+
+          for name in os.listdir('components'):
+              path = os.path.join('components', name)
+              if not os.path.isdir(path):
+                  continue
+
+              for f in ['code.py', 'metadata.json', 'icon.png']:
+                  if not os.path.exists(os.path.join(path, f)):
+                      errors.append(f'{name}: Missing {f}')
+
+              metadata_path = os.path.join(path, 'metadata.json')
+              if os.path.exists(metadata_path):
+                  try:
+                      with open(metadata_path, 'r') as f:
+                          metadata = json.load(f)
+                      if 'name' not in metadata:
+                          errors.append(f'{name}: metadata.json missing name')
+                  except json.JSONDecodeError as e:
+                      errors.append(f'{name}: Invalid JSON: {e}')
+
+          if errors:
+              print('Component validation errors:')
+              for e in errors:
+                  print(f'  - {e}')
+              sys.exit(1)
+          else:
+              print('✓ All components are valid!')
+          "
+
+  # Build CPython components (Rhino 8)
+  build-cpython:
+    name: Build CPython (Rhino 8)
+    runs-on: windows-latest
+    needs: validate
+    steps:
+      - uses: actions/checkout@v4
+      - uses: NuGet/setup-nuget@v2
+
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9.10'
+
+      - name: Install pythonnet
+        run: |
+          python -m pip install --upgrade pip
           python -m pip install pythonnet==3.0.3
 
-      - name: Run
-        uses: ./
-        with:
-          source: examples/cpy
-          target: build
-          interpreter: cpython
+      - name: Build components
+        run: |
+          python componentize_cpy.py components dist --version "0.1.0"
+
+      - name: List generated components
+        run: dir dist\*.ghuser
 
       - uses: actions/upload-artifact@v4
         with:
-          name: cpy_ghuser-components
-          path: build
+          name: ghuser-components-cpython
+          path: dist/*.ghuser
+          retention-days: 30
 
-  build_ipy_ghuser_components:
+  # Build IronPython components (Rhino 7)
+  build-ironpython:
+    name: Build IronPython (Rhino 7)
     runs-on: windows-latest
+    needs: validate
     steps:
-      - uses: actions/checkout@v2
-      - uses: NuGet/setup-nuget@v1.0.5
+      - uses: actions/checkout@v4
+      - uses: NuGet/setup-nuget@v2
 
       - name: Install IronPython
-        run: |
-          choco install ironpython --version=2.7.8.1
+        run: choco install ironpython --version=2.7.8.1
 
-      - name: Run
-        uses: ./
-        with:
-          source: examples/ipy
-          target: build
+      - name: Build example components
+        run: ipy componentize_ipy.py examples/ipy dist-ipy --version "0.1.0"
 
       - uses: actions/upload-artifact@v4
         with:
-          name: ipy_ghuser-components
-          path: build
+          name: ghuser-components-ironpython
+          path: dist-ipy/*.ghuser
+          retention-days: 30
+          if-no-files-found: ignore
 
-  build_ipy_v2_ghuser_components:
+  # Build IronPython v2 components (Rhino 8 IronPython mode)
+  build-ironpython-v2:
+    name: Build IronPython v2 (Rhino 8)
     runs-on: windows-latest
+    needs: validate
     steps:
-      - uses: actions/checkout@v2
-      - uses: NuGet/setup-nuget@v1.0.5
+      - uses: actions/checkout@v4
+      - uses: NuGet/setup-nuget@v2
 
       - name: Install IronPython
-        run: |
-          choco install ironpython --version=2.7.8.1
+        run: choco install ironpython --version=2.7.8.1
 
-      - name: Run
-        uses: ./
-        with:
-          source: examples/ipy_v2
-          target: build
-          interpreter: ipy_v2
+      - name: Build example components
+        run: ipy componentize_ipy_v2.py examples/ipy_v2 dist-ipy-v2 --version "0.1.0"
 
       - uses: actions/upload-artifact@v4
         with:
-          name: ipy_v2_ghuser-components
-          path: build
+          name: ghuser-components-ironpython-v2
+          path: dist-ipy-v2/*.ghuser
+          retention-days: 30
+          if-no-files-found: ignore

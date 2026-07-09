@@ -1,0 +1,178 @@
+{
+    "name": "Swarm Dynamics",
+    "nickname": "Swarm",
+    "category": "Physics",
+    "subcategory": "Simulation",
+    "description": "Particle swarm dynamics with springs, rotation and breathing effects",
+    "exposure": 2,
+    "instanceGuid": "b5c6d7e8-f9a0-1234-bcde-567890abcdef",
+    "ghpython": {
+        "marshalGuids": true,
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "N",
+                "nickname": "N",
+                "description": "Number of struts (default: 7)",
+                "optional": true,
+                "allowTreeAccess": false,
+                "showTypeHints": true,
+                "scriptParamAccess": "item",
+                "wireDisplay": "default",
+                "typeHintID": "int",
+                "simplify": false
+            },
+            {
+                "name": "Prec",
+                "nickname": "Prec",
+                "description": "Coordinate precision (default: 3)",
+                "optional": true,
+                "scriptParamAccess": "item",
+                "typeHintID": "int"
+            },
+            {
+                "name": "Speed",
+                "nickname": "Spd",
+                "description": "Rotation speed (default: 0.6)",
+                "optional": true,
+                "scriptParamAccess": "item",
+                "typeHintID": "float"
+            },
+            {
+                "name": "Amp",
+                "nickname": "Amp",
+                "description": "Breathing amplitude (default: 0.0)",
+                "optional": true,
+                "scriptParamAccess": "item",
+                "typeHintID": "float"
+            },
+            {
+                "name": "Knn",
+                "nickname": "Knn",
+                "description": "K-nearest neighbors (default: 4)",
+                "optional": true,
+                "scriptParamAccess": "item",
+                "typeHintID": "int"
+            },
+            {
+                "name": "Radius",
+                "nickname": "R",
+                "description": "Connection radius (default: 0.0, unlimited)",
+                "optional": true,
+                "scriptParamAccess": "item",
+                "typeHintID": "float"
+            },
+            {
+                "name": "Stiff",
+                "nickname": "K",
+                "description": "Spring stiffness (default: 1.5)",
+                "optional": true,
+                "scriptParamAccess": "item",
+                "typeHintID": "float"
+            },
+            {
+                "name": "Damp",
+                "nickname": "D",
+                "description": "Damping coefficient (default: 0.12)",
+                "optional": true,
+                "scriptParamAccess": "item",
+                "typeHintID": "float"
+            },
+            {
+                "name": "Dt",
+                "nickname": "Dt",
+                "description": "Time step (default: 0.03)",
+                "optional": true,
+                "scriptParamAccess": "item",
+                "typeHintID": "float"
+            },
+            {
+                "name": "Act",
+                "nickname": "Act",
+                "description": "Spring activation amplitude (default: 0.15)",
+                "optional": true,
+                "scriptParamAccess": "item",
+                "typeHintID": "float"
+            },
+            {
+                "name": "Seed",
+                "nickname": "Seed",
+                "description": "Random seed (default: 1)",
+                "optional": true,
+                "scriptParamAccess": "item",
+                "typeHintID": "int"
+            },
+            {
+                "name": "Box",
+                "nickname": "Box",
+                "description": "Bounding box for particle generation",
+                "optional": true,
+                "scriptParamAccess": "item",
+                "typeHintID": "box"
+            },
+            {
+                "name": "Start",
+                "nickname": "Start",
+                "description": "Start simulation (True to run)",
+                "optional": true,
+                "scriptParamAccess": "item",
+                "typeHintID": "bool"
+            },
+            {
+                "name": "Reset",
+                "nickname": "Reset",
+                "description": "Reset simulation (True to reset)",
+                "optional": true,
+                "scriptParamAccess": "item",
+                "typeHintID": "bool"
+            }
+        ],
+        "outputParameters": [
+            {
+                "name": "L",
+                "nickname": "L",
+                "description": "Strut lines"
+            },
+            {
+                "name": "Links",
+                "nickname": "Links",
+                "description": "Spring connection lines"
+            },
+            {
+                "name": "Nodes",
+                "nickname": "Nodes",
+                "description": "Particle positions"
+            },
+            {
+                "name": "MidPts",
+                "nickname": "Mid",
+                "description": "Strut midpoints"
+            },
+            {
+                "name": "Labels",
+                "nickname": "Lbl",
+                "description": "Strut length labels"
+            },
+            {
+                "name": "Lengths",
+                "nickname": "Len",
+                "description": "Strut lengths"
+            },
+            {
+                "name": "t",
+                "nickname": "t",
+                "description": "Simulation time"
+            },
+            {
+                "name": "Frame",
+                "nickname": "F",
+                "description": "Frame count"
+            },
+            {
+                "name": "out",
+                "nickname": "msg",
+                "description": "Debug messages"
+            }
+        ]
+    }
+}

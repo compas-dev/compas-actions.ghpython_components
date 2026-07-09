@@ -9,6 +9,57 @@ Well, here's an action for you then! 🦸‍♀️
 
 ---
 
+## 🎯 Enhanced Fork Features
+
+This fork adds powerful features for team collaboration and version management:
+
+### ✨ New Components
+
+| Component | Category | Description |
+|-----------|----------|-------------|
+| **Component Updater** | Utilities > Version | 版本檢查與管理工具（靈感來自 Ladybug Tools） |
+| **Swarm Dynamics** | Physics > Simulation | 粒子群體動力學模擬系統 |
+| **YOLO UDP Receiver** | YOLO > Network | YOLOv8 姿態偵測 UDP 數據接收器 |
+
+### 📚 Enhanced Documentation
+
+- **[DEVELOPMENT_GUIDE.md](DEVELOPMENT_GUIDE.md)** - 完整的組件開發教學與實戰範例
+- **[TEAM_COLLABORATION.md](TEAM_COLLABORATION.md)** - 團隊協作最佳實踐與 Git 工作流程
+- **[VERSION_MANAGEMENT.md](VERSION_MANAGEMENT.md)** - 版本管理系統設計與實作
+- **[COMPONENT_CATALOG.md](COMPONENT_CATALOG.md)** - 組件功能目錄
+- **[CHANGELOG.md](CHANGELOG.md)** - 詳細的變更日誌
+
+### 🚀 Quick Start
+
+```bash
+# Clone repository
+git clone https://github.com/fred1357944/compas-actions.ghpython_components.git
+cd compas-actions.ghpython_components
+
+# Setup conda environment
+conda env create -f environment.yml
+conda activate gh_timber
+
+# Build components
+gh_comp  # or use the full command below
+python componentize_cpy.py components dist --version "0.1.0"
+
+# Find generated components in dist/
+ls dist/*.ghuser
+```
+
+📖 **詳細教學**: 請參閱 [QUICKSTART.md](QUICKSTART.md)
+
+### 🔧 macOS ARM64 Support
+
+完整支援 Apple Silicon (M1/M2/M3) + Rhino 8：
+- ✅ pythonnet 3.x 配置
+- ✅ .NET 8.0 Runtime 整合
+- ✅ 自動化構建流程
+- 📝 詳細故障排除文檔
+
+---
+
 ## Usage
 
 ### Usage from Github Actions
